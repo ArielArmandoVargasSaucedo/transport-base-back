@@ -5,9 +5,9 @@ export class User {
     @PrimaryGeneratedColumn()
     id_aut_user: number;
 
-    @Column({unique: true})
+    @Column({type: 'varchar', unique: true})
     user_name: string;
 
-    @Column()
+    @Column({type: 'varchar'})
     password_user: string;
 }

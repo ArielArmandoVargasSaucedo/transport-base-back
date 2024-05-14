@@ -5,9 +5,9 @@ export class DriverSituation {
     @PrimaryGeneratedColumn()
     id_ds: number;
 
-    @Column()
+    @Column({type: 'date'})
     return_date_ds: Date;
 
-    @Column()
+    @Column({type: 'date'})
     current_date_ds: Date;
 }

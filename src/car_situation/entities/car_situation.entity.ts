@@ -5,9 +5,9 @@ export class CarSituation {
     @PrimaryGeneratedColumn()
     id_cs: number;
 
-    @Column()
+    @Column({type: 'date'})
     return_date_cs: Date;
 
-    @Column()
+    @Column({type: 'date'})
     current_date_cs: Date;
 }

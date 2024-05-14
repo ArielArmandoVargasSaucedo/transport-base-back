@@ -11,6 +11,15 @@ import { CarModule } from './car/car.module';
 import { CarSituationModule } from './car_situation/car_situation.module';
 import { TypeCarSituationModule } from './type_car_situation/type_car_situation.module';
 import { UserModule } from './user/user.module';
+import { RoleModule } from './role/role.module';
+import { SolicitudeModule } from './solicitude/solicitude.module';
+import { ProgrammingTypeModule } from './programming_type/programming_type.module';
+import { DateDModule } from './date_d/date_d.module';
+import { GroupTourModule } from './group_tour/group_tour.module';
+import { RouteModule } from './route/route.module';
+import { ModificationModule } from './modification/modification.module';
+import { ModChangeModule } from './mod_change/mod_change.module';
+import { ChangeTypeModule } from './change_type/change_type.module';
 
 @Module({
   imports: [
@@ -36,6 +45,15 @@ import { UserModule } from './user/user.module';
     CarSituationModule,
     TypeCarSituationModule,
     UserModule,
+    RoleModule,
+    SolicitudeModule,
+    ProgrammingTypeModule,
+    DateDModule,
+    GroupTourModule,
+    RouteModule,
+    ModificationModule,
+    ModChangeModule,
+    ChangeTypeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

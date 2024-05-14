@@ -5,18 +5,18 @@ export class Driver {
     @PrimaryGeneratedColumn()
     id_driver: number;
 
-    @Column({unique: true})
+    @Column({type: 'varchar' ,unique: true})
     dni_driver: string;
 
-    @Column()
+    @Column({type: 'varchar'})
     driver_name: string;
 
-    @Column()
+    @Column({type: 'varchar'})
     home_address: string;
 
-    @Column()
+    @Column({type: 'varchar'})
     category: string;
 
-    @Column()
+    @Column({type: 'boolean'})
     is_copilot: boolean;
 }

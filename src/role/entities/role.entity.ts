@@ -1,10 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name: 'type_driver_situation'})
-export class TypeDriverSituation {
+@Entity({name: 'role'})
+export class Role {
     @PrimaryGeneratedColumn()
-    id_aut_type_ds: number;
+    id_aut_role: number;
 
     @Column({type: 'varchar', unique: true})
-    type_ds_name: string;
+    role_type:string;
 }

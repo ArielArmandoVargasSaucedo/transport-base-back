@@ -23,22 +23,22 @@ export class TypeCarSituationService {
     return await this.typesCarSituationRepository.find();
   }
 
-  async findOne(id_type_cs: number) {
-    return await this.typesCarSituationRepository.findOne({where: {id_type_cs}});
+  async findOne(id_aut_type_cs: number) {
+    return await this.typesCarSituationRepository.findOne({where: {id_aut_type_cs}});
   }
 
-  async update(id_type_cs: number, updateTypeCarSituationDto: UpdateTypeCarSituationDto) {
-    const typeCarSituation = await this.findOne(id_type_cs)
+  async update(id_aut_type_cs: number, updateTypeCarSituationDto: UpdateTypeCarSituationDto) {
+    const typeCarSituation = await this.findOne(id_aut_type_cs)
     if(!typeCarSituation)
       throw new NotFoundException
     Object.assign(typeCarSituation, updateTypeCarSituationDto)
     return await this.typesCarSituationRepository.save(typeCarSituation);
   }
 
-  async remove(id_type_cs: number) {
-    const typeCarSituation = await this.findOne(id_type_cs)
+  async remove(id_aut_type_cs: number) {
+    const typeCarSituation = await this.findOne(id_aut_type_cs)
     if(!typeCarSituation)
       throw new NotFoundException
-    return await this.typesCarSituationRepository.delete(id_type_cs);
+    return await this.typesCarSituationRepository.delete(id_aut_type_cs);
   }
 }

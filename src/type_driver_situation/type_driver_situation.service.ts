@@ -23,22 +23,22 @@ export class TypeDriverSituationService {
     return await this.typesDriverSituationRepository.find();
   }
 
-  async findOne(id_type_ds: number) {
-    return await this.typesDriverSituationRepository.findOne({where: {id_type_ds}});
+  async findOne(id_aut_type_ds: number) {
+    return await this.typesDriverSituationRepository.findOne({where: {id_aut_type_ds}});
   }
 
-  async update(id_type_ds: number, updateTypeDriverSituationDto: UpdateTypeDriverSituationDto) {
-    const typeDriverSituation = await this.findOne(id_type_ds)
+  async update(id_aut_type_ds: number, updateTypeDriverSituationDto: UpdateTypeDriverSituationDto) {
+    const typeDriverSituation = await this.findOne(id_aut_type_ds)
     if(!typeDriverSituation)
       throw new NotFoundException
     Object.assign(typeDriverSituation, updateTypeDriverSituationDto)
     return await this.typesDriverSituationRepository.save(typeDriverSituation);
   }
 
-  async remove(id_type_ds: number) {
-    const typesDriverSituation = await this.findOne(id_type_ds)
+  async remove(id_aut_type_ds: number) {
+    const typesDriverSituation = await this.findOne(id_aut_type_ds)
     if(typesDriverSituation)
       throw new NotFoundException
-    return await this.typesDriverSituationRepository.delete(typesDriverSituation);
+    return await this.typesDriverSituationRepository.delete(id_aut_type_ds);
   }
 }

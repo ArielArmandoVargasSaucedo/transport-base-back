@@ -5,12 +5,12 @@ export class Car {
     @PrimaryGeneratedColumn()
     id_car: number;
 
-    @Column({unique: true})
+    @Column({type:'varchar', unique: true})
     car_number: string;
 
-    @Column()
+    @Column({type: 'varchar'})
     car_brand: string;
 
-    @Column()
+    @Column({type: 'integer'})
     number_of_seats: number;
 }
