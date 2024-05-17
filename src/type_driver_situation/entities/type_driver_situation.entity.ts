@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { DriverSituation } from "src/driver_situation/entities/driver_situation.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'type_driver_situation'})
 export class TypeDriverSituation {
@@ -7,4 +8,7 @@ export class TypeDriverSituation {
 
     @Column({type: 'varchar', unique: true})
     type_ds_name: string;
+
+    @OneToMany(() => DriverSituation, (driverSituation) => driverSituation.typeDriverSituation)
+    driverSituation: DriverSituation;
 }

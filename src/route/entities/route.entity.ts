@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Solicitude } from "src/solicitude/entities/solicitude.entity";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'route'})
 export class Route {
@@ -16,4 +17,11 @@ export class Route {
 
     @Column({type: 'time'})
     end_time: string;
+
+    @Column({type: 'integer'})
+    id_solicitude: number;
+
+    @OneToOne(() => Solicitude, (solicitude) => solicitude.route)
+    @JoinColumn({name: 'id_solicitude'})
+    solicitude: Solicitude;
 }

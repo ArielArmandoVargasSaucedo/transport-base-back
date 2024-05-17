@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ModChange } from "src/mod_change/entities/mod_change.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'change_type'})
 export class ChangeType {
@@ -7,4 +8,7 @@ export class ChangeType {
 
     @Column({type: 'varchar', unique: true})
     change_type_name: string;
+
+    @OneToMany(() => ModChange, (ModChange) => ModChange.changeType)
+    modChange: ModChange;
 }

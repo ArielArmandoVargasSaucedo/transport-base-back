@@ -37,7 +37,7 @@ export class TypeDriverSituationService {
 
   async remove(id_aut_type_ds: number) {
     const typesDriverSituation = await this.findOne(id_aut_type_ds)
-    if(typesDriverSituation)
+    if(!typesDriverSituation)
       throw new NotFoundException
     return await this.typesDriverSituationRepository.delete(id_aut_type_ds);
   }

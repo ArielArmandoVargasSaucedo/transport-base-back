@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Driver } from "src/driver/entities/driver.entity";
+import { Role } from "src/role/entities/role.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'user'})
 export class User {
@@ -10,4 +12,18 @@ export class User {
 
     @Column({type: 'varchar'})
     password_user: string;
+
+    @Column({type: 'integer'})
+    id_aut_role: number;
+
+    @Column({type: 'integer'})
+    id_driver: number;
+
+    @ManyToOne(() => Role, (role) => role.user)
+    @JoinColumn({name: 'id_aut_role'})
+    role: Role;
+
+    @OneToOne(() => Driver, (driver) => driver.user)
+    @JoinColumn({name: 'id_driver'})
+    driver: Driver;
 }

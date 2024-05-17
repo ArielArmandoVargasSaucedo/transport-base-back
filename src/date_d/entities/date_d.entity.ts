@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Solicitude } from "src/solicitude/entities/solicitude.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'date_d'})
 export class DateD {
@@ -10,4 +11,7 @@ export class DateD {
 
     @Column({type: 'time'})
     hour_d: string;
+
+    @OneToMany(() => Solicitude, (solicitude) => solicitude.dateD)
+    solicitude: Solicitude;
 }

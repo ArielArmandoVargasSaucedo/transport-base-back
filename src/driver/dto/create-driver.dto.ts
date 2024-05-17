@@ -4,4 +4,6 @@ export class CreateDriverDto {
     home_address: string;
     category: string;
     is_copilot: boolean;
+    id_ds: number;
+    id_car: number;
 }
