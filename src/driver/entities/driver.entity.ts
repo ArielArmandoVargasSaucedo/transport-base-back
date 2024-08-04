@@ -8,25 +8,25 @@ export class Driver {
     @PrimaryGeneratedColumn()
     id_driver: number;
 
-    @Column({type: 'varchar' ,unique: true})
+    @Column({type: 'varchar' ,unique: true, nullable: false})
     dni_driver: string;
 
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', nullable: false})
     driver_name: string;
 
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', nullable: false})
     home_address: string;
 
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', nullable: false})
     category: string;
 
-    @Column({type: 'boolean'})
+    @Column({type: 'boolean', nullable: false})
     is_copilot: boolean;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_ds: number;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: true})
     id_car: number;
 
     @OneToOne(() => User, (user) => user.driver)

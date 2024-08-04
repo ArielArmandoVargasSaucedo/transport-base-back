@@ -6,13 +6,13 @@ export class GroupTour {
     @PrimaryGeneratedColumn()
     id_group: number;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     group_code: number;
 
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', nullable: false})
     group_country: string;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     number_of_tourist: number;
 
     @OneToMany(() => Solicitude, (solicitude) => solicitude.groupTour)

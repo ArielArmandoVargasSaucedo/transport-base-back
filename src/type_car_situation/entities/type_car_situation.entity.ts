@@ -6,7 +6,7 @@ export class TypeCarSituation {
     @PrimaryGeneratedColumn()
     id_aut_type_cs: number;
 
-    @Column({type: 'varchar', unique: true})
+    @Column({type: 'varchar', unique: true, nullable: false})
     type_cs_name: string;
 
     @OneToMany(() => TypeCarSituation, (typeCarSituation) => typeCarSituation.carSituation)

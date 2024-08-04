@@ -7,13 +7,13 @@ export class CarSituation {
     @PrimaryGeneratedColumn()
     id_cs: number;
 
-    @Column({type: 'date'})
+    @Column({type: 'date', nullable: true})
     return_date_cs: Date;
 
-    @Column({type: 'date'})
+    @Column({type: 'date', nullable: false})
     current_date_cs: Date;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_aut_type_cs: number;
 
     @OneToMany(() => Car, (car) => car.carSituation)

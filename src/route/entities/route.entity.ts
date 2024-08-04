@@ -6,19 +6,19 @@ export class Route {
     @PrimaryGeneratedColumn()
     id_route: number;
 
-    @Column({type: 'double precision'})
+    @Column({type: 'double precision', nullable: false})
     km_available_star: number;
 
-    @Column({type: 'double precision'})
+    @Column({type: 'double precision', nullable: false})
     km_available_end: number;
 
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', nullable: false})
     pick_up_location: string;
 
-    @Column({type: 'time'})
+    @Column({type: 'time', nullable: false})
     end_time: string;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_solicitude: number;
 
     @OneToOne(() => Solicitude, (solicitude) => solicitude.route)

@@ -6,7 +6,7 @@ export class ProgrammingType {
     @PrimaryGeneratedColumn()
     id_aut_prog_type: number;
 
-    @Column({type: 'varchar', unique: true})
+    @Column({type: 'varchar', unique: true, nullable: false})
     prog_type_name: string;
 
     @OneToMany(() => Solicitude, (solicitude) => solicitude.programmingType)

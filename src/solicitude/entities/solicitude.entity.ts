@@ -11,25 +11,28 @@ export class Solicitude {
     @PrimaryGeneratedColumn()
     id_solicitude: number;
 
-    @Column({type: 'time'})
+    @Column({type: 'time', nullable: false})
     programming_start_time: string;
 
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', nullable: false})
     programming_to_be_done: string;
 
-    @Column({type: 'time'})
+    @Column({type: 'time', nullable: false})
     duration_time: string;
 
-    @Column({type: 'integer'})
+    @Column({type: 'double precision', nullable: false})
+    mileage: number;
+
+    @Column({type: 'integer', nullable: false})
     id_car: number;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_aut_prog_type: number;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_group: number;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_aut_date: number;
 
     @ManyToOne(() => Car, (car) => car.solicitude)

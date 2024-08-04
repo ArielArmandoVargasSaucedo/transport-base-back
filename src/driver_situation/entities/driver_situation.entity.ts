@@ -7,13 +7,13 @@ export class DriverSituation {
     @PrimaryGeneratedColumn()
     id_ds: number;
 
-    @Column({type: 'date'})
+    @Column({type: 'date', nullable: true})
     return_date_ds: Date;
 
-    @Column({type: 'date'})
+    @Column({type: 'date', nullable: false})
     current_date_ds: Date;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_aut_type_ds: number;
 
     @ManyToOne(() => TypeDriverSituation, (typeDriverSituation) => typeDriverSituation.driverSituation)

@@ -8,16 +8,16 @@ export class Car {
     @PrimaryGeneratedColumn()
     id_car: number;
 
-    @Column({type:'varchar', unique: true})
+    @Column({type:'varchar', unique: true, nullable: false})
     car_number: string;
 
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', nullable: false})
     car_brand: string;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     number_of_seats: number;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_cs: number;
 
     @OneToMany(() => Driver, (driver) => driver.car)

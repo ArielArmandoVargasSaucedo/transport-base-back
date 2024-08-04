@@ -7,16 +7,19 @@ export class User {
     @PrimaryGeneratedColumn()
     id_aut_user: number;
 
-    @Column({type: 'varchar', unique: true})
+    @Column({type: 'varchar', unique: true, nullable: false})
     user_name: string;
 
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', nullable: false})
     password_user: string;
 
-    @Column({type: 'integer'})
+    @Column({type: 'varchar', unique: true, nullable: false})
+    dni_user:string;
+
+    @Column({type: 'integer', nullable: false})
     id_aut_role: number;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: true})
     id_driver: number;
 
     @ManyToOne(() => Role, (role) => role.user)

@@ -7,10 +7,10 @@ export class Modification {
     @PrimaryGeneratedColumn()
     id_modification: number;
 
-    @Column({type: 'date'})
+    @Column({type: 'date', nullable: false})
     modification_date: Date;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_solicitude: number;
 
     @OneToMany(() => ModChange, (modChange) => modChange.modification)

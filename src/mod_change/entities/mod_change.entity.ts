@@ -7,10 +7,10 @@ export class ModChange {
     @PrimaryGeneratedColumn()
     id_mod_change: number;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_aut_change_type: number;
 
-    @Column({type: 'integer'})
+    @Column({type: 'integer', nullable: false})
     id_modification: number;
 
     @ManyToOne(() => ChangeType, (changeType) => changeType.modChange)

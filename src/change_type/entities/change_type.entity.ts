@@ -6,7 +6,7 @@ export class ChangeType {
     @PrimaryGeneratedColumn()
     id_aut_change_type: number;
 
-    @Column({type: 'varchar', unique: true})
+    @Column({type: 'varchar', unique: true, nullable: false})
     change_type_name: string;
 
     @OneToMany(() => ModChange, (ModChange) => ModChange.changeType)

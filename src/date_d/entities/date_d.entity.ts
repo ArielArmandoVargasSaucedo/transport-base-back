@@ -6,10 +6,10 @@ export class DateD {
     @PrimaryGeneratedColumn()
     id_aut_date: number;
 
-    @Column({type: 'date'})
+    @Column({type: 'date', nullable: false})
     id_date: Date;
 
-    @Column({type: 'time'})
+    @Column({type: 'time', nullable: false})
     hour_d: string;
 
     @OneToMany(() => Solicitude, (solicitude) => solicitude.dateD)
