@@ -20,11 +20,16 @@ export class RouteService {
   }
 
   async findAll() {
-    return await this.routesRepository.find();
+    return await this.routesRepository.find({
+      relations: ['solicitude']
+    });
   }
 
   async findOne(id_route: number) {
-    return await this.routesRepository.findOne({where: {id_route}});
+    return await this.routesRepository.findOne({
+      where: {id_route},
+      relations: ['solicitude']
+    });
   }
 
   async update(id_route: number, updateRouteDto: UpdateRouteDto) {

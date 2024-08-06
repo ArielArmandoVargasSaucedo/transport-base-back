@@ -20,11 +20,16 @@ export class DriverService {
   }
 
   async findAll() {
-    return await this.driversRepository.find();
+    return await this.driversRepository.find({
+      relations: ['driver_situation', 'car']
+    });
   }
 
   async findOne(id_driver: number) {
-    return await this.driversRepository.findOne({where: {id_driver}});
+    return await this.driversRepository.findOne({
+      where: {id_driver},
+      relations: ['driver_situation', 'car']
+    });
   }
 
   async update(id_driver: number, updateDriverDto: UpdateDriverDto) {

@@ -20,11 +20,16 @@ export class ModificationService {
   }
 
   async findAll() {
-    return await this.modificationsRepository.find();
+    return await this.modificationsRepository.find({
+      relations: ['solicitude']
+    });
   }
 
   async findOne(id_modification: number) {
-    return await this.modificationsRepository.findOne({where: {id_modification}});
+    return await this.modificationsRepository.findOne({
+      where: {id_modification},
+      relations: ['solicitude']
+    });
   }
 
   async update(id_modification: number, updateModificationDto: UpdateModificationDto) {

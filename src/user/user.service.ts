@@ -33,7 +33,10 @@ export class UserService {
   }
 
   async findOne(id_aut_user: number) {
-    return await this.usersRepository.findOne({where: {id_aut_user}});
+    return await this.usersRepository.findOne({
+      where: {id_aut_user},
+      relations: ['role', 'driver']
+    });
   }
 
   async update(id_aut_user: number, updateUserDto: UpdateUserDto) {

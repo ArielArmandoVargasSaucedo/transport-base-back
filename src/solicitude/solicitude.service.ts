@@ -20,11 +20,16 @@ export class SolicitudeService {
   }
 
   async findAll() {
-    return await this.solicitudesRepository.find();
+    return await this.solicitudesRepository.find({
+      relations: ['car', 'programming_type', 'group_tour', 'date_d']
+    });
   }
 
   async findOne(id_solicitude: number) {
-    return await this.solicitudesRepository.findOne({where: {id_solicitude}});
+    return await this.solicitudesRepository.findOne({
+      where: {id_solicitude},
+      relations: ['car', 'programming_type', 'group_tour', 'date_d']
+    });
   }
 
   async update(id_solicitude: number, updateSolicitudeDto: UpdateSolicitudeDto) {

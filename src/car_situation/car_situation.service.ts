@@ -20,11 +20,16 @@ export class CarSituationService {
   }
 
   async findAll() {
-    return await this.carSituationsRepository.find();
+    return await this.carSituationsRepository.find({
+      relations: ['type_car_situation']
+    });
   }
 
   async findOne(id_cs: number) {
-    return await this.carSituationsRepository.findOne({where: {id_cs}});
+    return await this.carSituationsRepository.findOne({
+      where: {id_cs},
+      relations: ['type_car_situation']
+    });
   }
 
   async update(id_cs: number, updateCarSituationDto: UpdateCarSituationDto) {
