@@ -21,14 +21,14 @@ export class DriverService {
 
   async findAll() {
     return await this.driversRepository.find({
-      relations: ['driver_situation', 'car']
+      relations: ['driverSituation', 'car']
     });
   }
 
   async findOne(id_driver: number) {
     return await this.driversRepository.findOne({
       where: {id_driver},
-      relations: ['driver_situation', 'car']
+      relations: ['driverSituation', 'car'] //Hay que ir a driver.entity y ver en la linea 35-37 que se declaró, el _ estaba de sobra, esto es lo mismo para todas las demas relaciones en todas las tablas
     });
   }
 

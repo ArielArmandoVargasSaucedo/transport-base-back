@@ -28,7 +28,7 @@ export class CarService {
   async findOne(id_car: number) {
     return await this.carsRepository.findOne({
       where: {id_car},
-      relations: ['car_situation']
+      relations: ['carSituation']
     });
   }
 
