@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { DriverSituation } from "src/driver_situation/entities/driver_situation.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -9,6 +10,7 @@ export class TypeDriverSituation {
     @Column({type: 'varchar', unique: true, nullable: false})
     type_ds_name: string;
 
+    @Exclude()
     @OneToMany(() => DriverSituation, (driverSituation) => driverSituation.typeDriverSituation)
-    driverSituation: DriverSituation;
+    driverSituation: Array<DriverSituation>;
 }

@@ -21,5 +21,5 @@ export class DriverSituation {
     typeDriverSituation: TypeDriverSituation;
 
     @OneToMany(() => Driver, (driver) => driver.driverSituation)
-    driver: Driver;
+    driver: Array<Driver>;
 }

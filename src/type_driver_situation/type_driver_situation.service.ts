@@ -20,6 +20,8 @@ export class TypeDriverSituationService {
   }
 
   async findAll() {
+    await this.typesDriverSituationRepository.find()
+    console.log("asdsad")
     return await this.typesDriverSituationRepository.find();
   }
 
