@@ -44,6 +44,12 @@ export class UserService {
     if(!user)
       throw new NotFoundException
     Object.assign(user, updateUserDto)
+
+    //Encriptar contraseña
+    const saltOrRounds = 10
+    const hash = await bcrypt.hash(user.password_user, saltOrRounds)
+    user.password_user = hash
+    
     return await this.usersRepository.save(user);
   }
 

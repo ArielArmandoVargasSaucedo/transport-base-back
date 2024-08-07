@@ -21,14 +21,14 @@ export class CarSituationService {
 
   async findAll() {
     return await this.carSituationsRepository.find({
-      relations: ['type_car_situation']
+      relations: ['typeCarSituation']
     });
   }
 
   async findOne(id_cs: number) {
     return await this.carSituationsRepository.findOne({
       where: {id_cs},
-      relations: ['type_car_situation']
+      relations: ['typeCarSituation']
     });
   }
 

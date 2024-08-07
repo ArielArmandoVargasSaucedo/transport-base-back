@@ -21,14 +21,14 @@ export class ModChangeService {
 
   async findAll() {
     return await this.modChangesRepository.find({
-      relations: ['change_type', 'modification']
+      relations: ['changeType', 'modification']
     });
   }
 
   async findOne(id_mod_change: number) {
     return await this.modChangesRepository.findOne({
       where: {id_mod_change},
-      relations: ['change_type', 'modification']
+      relations: ['changeType', 'modification']
     });
   }
 

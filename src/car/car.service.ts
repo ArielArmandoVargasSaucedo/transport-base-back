@@ -21,7 +21,7 @@ export class CarService {
 
   async findAll() {
     return await this.carsRepository.find({
-      relations: ['car_situation']
+      relations: ['carSituation']
     });
   }
 

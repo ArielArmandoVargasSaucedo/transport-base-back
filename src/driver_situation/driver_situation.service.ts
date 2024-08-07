@@ -21,14 +21,14 @@ export class DriverSituationService {
 
   async findAll() {
     return await this.driverSituationsRepository.find({
-      relations: ['type_driver_situation']
+      relations: ['typeDriverSituation']
     });
   }
 
   async findOne(id_ds: number) {
     return await this.driverSituationsRepository.findOne({
       where: {id_ds},
-      relations: ['type_driver_situation']
+      relations: ['typeDriverSituation']
     });
   }
 

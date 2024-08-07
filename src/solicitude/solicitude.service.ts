@@ -21,14 +21,14 @@ export class SolicitudeService {
 
   async findAll() {
     return await this.solicitudesRepository.find({
-      relations: ['car', 'programming_type', 'group_tour', 'date_d']
+      relations: ['car', 'programmingType', 'groupTour', 'dateD']
     });
   }
 
   async findOne(id_solicitude: number) {
     return await this.solicitudesRepository.findOne({
       where: {id_solicitude},
-      relations: ['car', 'programming_type', 'group_tour', 'date_d']
+      relations: ['car', 'programmingType', 'groupTour', 'dateD']
     });
   }
 
