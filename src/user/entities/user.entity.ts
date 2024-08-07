@@ -22,7 +22,7 @@ export class User {
     @Column({type: 'integer', nullable: true})
     id_driver: number;
 
-    @ManyToOne(() => Role, (role) => role.user)
+    @ManyToOne(() => Role, (role) => role.users)
     @JoinColumn({name: 'id_aut_role'})
     role: Role;
 

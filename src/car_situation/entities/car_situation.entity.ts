@@ -17,7 +17,7 @@ export class CarSituation {
     id_aut_type_cs: number;
 
     @OneToMany(() => Car, (car) => car.carSituation)
-    car: Car;
+    cars: Array<Car>;
 
     @ManyToOne(() => TypeCarSituation, (typeCarSituation) => typeCarSituation.carSituation)
     @JoinColumn({name: 'id_aut_type_cs'})

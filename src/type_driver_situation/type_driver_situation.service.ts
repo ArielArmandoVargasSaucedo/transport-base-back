@@ -20,9 +20,7 @@ export class TypeDriverSituationService {
   }
 
   async findAll() {
-    await this.typesDriverSituationRepository.find()
-    console.log("asdsad")
-    return await this.typesDriverSituationRepository.find();
+     return await this.typesDriverSituationRepository.find();
   }
 
   async findOne(id_aut_type_ds: number) {

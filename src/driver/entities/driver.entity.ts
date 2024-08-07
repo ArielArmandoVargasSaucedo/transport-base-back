@@ -36,7 +36,7 @@ export class Driver {
     @JoinColumn({name: 'id_ds'})
     driverSituation: DriverSituation;
 
-    @ManyToOne(() => Car, (car) => car.driver)
+    @ManyToOne(() => Car, (car) => car.drivers)
     @JoinColumn({name: 'id_car'})
     car: Car;
 }

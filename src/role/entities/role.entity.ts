@@ -10,5 +10,5 @@ export class Role {
     role_type:string;
 
     @OneToMany(() => User, (user) => user.role)
-    user: User;
+    users: Array<User>;
 }

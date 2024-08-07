@@ -1,7 +1,5 @@
 import { Car } from "src/car/entities/car.entity";
-import { DateD } from "src/date_d/entities/date_d.entity";
 import { GroupTour } from "src/group_tour/entities/group_tour.entity";
-import { Modification } from "src/modification/entities/modification.entity";
 import { ProgrammingType } from "src/programming_type/entities/programming_type.entity";
 import { Route } from "src/route/entities/route.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
@@ -32,28 +30,23 @@ export class Solicitude {
     @Column({type: 'integer', nullable: false})
     id_group: number;
 
-    @Column({type: 'integer', nullable: false})
-    id_aut_date: number;
-
-    @ManyToOne(() => Car, (car) => car.solicitude)
+    @Column({type:'date'})
+    dateD: Date;
+    
+    @ManyToOne(() => Car, (car) => car.solicitudes)
     @JoinColumn({name: 'id_car'})
     car: Car;
 
-    @ManyToOne(() => ProgrammingType, (programmingType) => programmingType.solicitude)
+    @ManyToOne(() => ProgrammingType, (programmingType) => programmingType.solicitudes)
     @JoinColumn({name: 'id_aut_prog_type'})
     programmingType: ProgrammingType;
 
     @OneToOne(() => Route, (route) => route.solicitude)
     route: Route;
 
-    @ManyToOne(() => GroupTour, (groupTour) => groupTour.solicitude)
+    @ManyToOne(() => GroupTour, (groupTour) => groupTour.solicitudes)
     @JoinColumn({name: 'id_group'})
     groupTour: GroupTour;
 
-    @ManyToOne(() => DateD, (dateD) => dateD.solicitude)
-    @JoinColumn({name: 'id_aut_date'})
-    dateD: DateD;
-
-    @OneToMany(() => Modification, (modification) => modification.solicitude)
-    modification: Modification;
+  
 }

@@ -21,12 +21,12 @@ export class Car {
     id_cs: number;
 
     @OneToMany(() => Driver, (driver) => driver.car)
-    driver: Driver;
+    drivers: Array<Driver>;
 
-    @ManyToOne(() => CarSituation, (carSituation) => carSituation.car)
+    @ManyToOne(() => CarSituation, (carSituation) => carSituation.cars)
     @JoinColumn({name: 'id_cs'})
     carSituation: CarSituation;
 
     @OneToMany(() => Solicitude, solicitude => solicitude.car)
-    solicitude: Solicitude;
+    solicitudes: Array<Solicitude>;
 }
