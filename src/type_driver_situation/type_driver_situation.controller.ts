@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query } from '@nestjs/common';
 import { TypeDriverSituationService } from './type_driver_situation.service';
 import { CreateTypeDriverSituationDto } from './dto/create-type_driver_situation.dto';
 import { UpdateTypeDriverSituationDto } from './dto/update-type_driver_situation.dto';
@@ -11,10 +11,11 @@ export class TypeDriverSituationController {
   create(@Body() createTypeDriverSituationDto: CreateTypeDriverSituationDto) {
     return this.typeDriverSituationService.create(createTypeDriverSituationDto);
   }
-@UseInterceptors(ClassSerializerInterceptor)
+  
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll() {
-    return await this.typeDriverSituationService.findAll();
+  async findAll(@Query("type_ds_name") type_ds_name: string) {
+    return await this.typeDriverSituationService.findAll(type_ds_name);
   }
 
   @Get(':id')

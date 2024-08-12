@@ -3,7 +3,7 @@ import { CreateProgrammingTypeDto } from './dto/create-programming_type.dto';
 import { UpdateProgrammingTypeDto } from './dto/update-programming_type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProgrammingType } from './entities/programming_type.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class ProgrammingTypeService {
@@ -19,8 +19,13 @@ export class ProgrammingTypeService {
     return await this.programmingTypesRepository.save(programmingType);
   }
 
-  async findAll() {
-    return await this.programmingTypesRepository.find();
+  async findAll(prog_type_name: string) {
+    const progTypeNameList: Array<ProgrammingType> = await this.programmingTypesRepository.find({
+      where:{
+        prog_type_name: prog_type_name ? Like(`%${prog_type_name}%`) : prog_type_name
+      },
+    })
+    return progTypeNameList;
   }
 
   async findOne(id_aut_prog_type: number) {

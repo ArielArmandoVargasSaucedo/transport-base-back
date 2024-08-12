@@ -3,7 +3,7 @@ import { CreateTypeCarSituationDto } from './dto/create-type_car_situation.dto';
 import { UpdateTypeCarSituationDto } from './dto/update-type_car_situation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeCarSituation } from './entities/type_car_situation.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class TypeCarSituationService {
@@ -19,8 +19,13 @@ export class TypeCarSituationService {
     return await this.typesCarSituationRepository.save(typeCarSituation);
   }
 
-  async findAll() {
-    return await this.typesCarSituationRepository.find();
+  async findAll(type_cs_name?: string) {
+    const typeCarSituationList: Array<TypeCarSituation> = await this.typesCarSituationRepository.find({
+      where:{
+        type_cs_name: type_cs_name ? Like(`%${type_cs_name}%`) : type_cs_name
+      },
+    })
+    return typeCarSituationList;
   }
 
   async findOne(id_aut_type_cs: number) {

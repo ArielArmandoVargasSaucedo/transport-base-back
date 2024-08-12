@@ -3,7 +3,7 @@ import { CreateTypeDriverSituationDto } from './dto/create-type_driver_situation
 import { UpdateTypeDriverSituationDto } from './dto/update-type_driver_situation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeDriverSituation } from './entities/type_driver_situation.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class TypeDriverSituationService {
@@ -19,8 +19,13 @@ export class TypeDriverSituationService {
     return await this.typesDriverSituationRepository.save(typeDriverSituation);
   }
 
-  async findAll() {
-     return await this.typesDriverSituationRepository.find();
+  async findAll(type_ds_name?: string) {
+    const driverSituationList: Array<TypeDriverSituation> = await this.typesDriverSituationRepository.find({
+      where:{
+        type_ds_name: type_ds_name ? Like(`%${type_ds_name}%`) : type_ds_name
+      },
+    })
+     return driverSituationList;
   }
 
   async findOne(id_aut_type_ds: number) {
