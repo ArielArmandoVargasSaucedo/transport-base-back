@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query } from '@nestjs/common';
 import { DriverService } from './driver.service';
 import { CreateDriverDto } from './dto/create-driver.dto';
 import { UpdateDriverDto } from './dto/update-driver.dto';
@@ -12,9 +12,11 @@ export class DriverController {
     return this.driverService.create(createDriverDto);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.driverService.findAll();
+  async findAll(@Query("dni_driver") dni_driver: string, @Query("driver_name") driver_name: string, @Query("home_address") home_address: string,
+  @Query("category") category: string, @Query("is_copilot") is_copilot: boolean, @Query("type_driver_situation") type_driver_situation: number) {
+    return this.driverService.findAll(dni_driver, driver_name, home_address, category, is_copilot, type_driver_situation);
   }
 
   @Get(':id')

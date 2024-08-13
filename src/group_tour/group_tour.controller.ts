@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query } from '@nestjs/common';
 import { GroupTourService } from './group_tour.service';
 import { CreateGroupTourDto } from './dto/create-group_tour.dto';
 import { UpdateGroupTourDto } from './dto/update-group_tour.dto';
@@ -12,9 +12,10 @@ export class GroupTourController {
     return this.groupTourService.create(createGroupTourDto);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.groupTourService.findAll();
+  async findAll(@Query("group_code") group_code: number, @Query("country") country: string, @Query("number_of_tourist") number_of_tourist: number) {
+    return this.groupTourService.findAll(group_code, country, number_of_tourist);
   }
 
   @Get(':id')

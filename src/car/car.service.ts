@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Car } from './entities/car.entity';
 
 @Injectable()
@@ -15,14 +15,24 @@ export class CarService {
   }
 
   async create(createCarDto: CreateCarDto) {
+    createCarDto.car_number = createCarDto.car_brand.toUpperCase()
     const car = this.carsRepository.create(createCarDto)
     return await this.carsRepository.save(car);
   }
 
-  async findAll() {
-    return await this.carsRepository.find({
-      relations: ['carSituation']
+  async findAll(car_number?: string, car_brand?: string, number_of_seats?: number, type_car_situation?: number) {
+    const carList: Array<Car> =  await this.carsRepository.find({
+      relations: ['carSituation'],
+      where:{
+        car_number: car_number ? Like(`%${car_number.toUpperCase()}%`) : car_number,
+        car_brand: car_brand ? Like(`%${car_brand.toLowerCase()}%`): car_brand,
+        number_of_seats,
+        carSituation:{
+          id_aut_type_cs: type_car_situation
+        },
+      },
     });
+    return carList;
   }
 
   async findOne(id_car: number) {

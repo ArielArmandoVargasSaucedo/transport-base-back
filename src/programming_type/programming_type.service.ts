@@ -15,6 +15,7 @@ export class ProgrammingTypeService {
   }
 
   async create(createProgrammingTypeDto: CreateProgrammingTypeDto) {
+    createProgrammingTypeDto.prog_type_name = createProgrammingTypeDto.prog_type_name.toLowerCase()
     const programmingType = this.programmingTypesRepository.create(createProgrammingTypeDto)
     return await this.programmingTypesRepository.save(programmingType);
   }
@@ -22,7 +23,7 @@ export class ProgrammingTypeService {
   async findAll(prog_type_name: string) {
     const progTypeNameList: Array<ProgrammingType> = await this.programmingTypesRepository.find({
       where:{
-        prog_type_name: prog_type_name ? Like(`%${prog_type_name}%`) : prog_type_name
+        prog_type_name: prog_type_name ? Like(`%${prog_type_name.toLowerCase()}%`) : prog_type_name
       },
     })
     return progTypeNameList;

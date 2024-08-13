@@ -15,6 +15,7 @@ export class TypeDriverSituationService {
   }
 
   async create(createTypeDriverSituationDto: CreateTypeDriverSituationDto) {
+    createTypeDriverSituationDto.type_ds_name = createTypeDriverSituationDto.type_ds_name.toLowerCase()
     const typeDriverSituation = this.typesDriverSituationRepository.create(createTypeDriverSituationDto) 
     return await this.typesDriverSituationRepository.save(typeDriverSituation);
   }
@@ -22,10 +23,10 @@ export class TypeDriverSituationService {
   async findAll(type_ds_name?: string) {
     const driverSituationList: Array<TypeDriverSituation> = await this.typesDriverSituationRepository.find({
       where:{
-        type_ds_name: type_ds_name ? Like(`%${type_ds_name}%`) : type_ds_name
+        type_ds_name: type_ds_name ? Like(`%${type_ds_name.toLowerCase()}%`) : type_ds_name
       },
     })
-     return driverSituationList;
+    return driverSituationList;
   }
 
   async findOne(id_aut_type_ds: number) {

@@ -15,14 +15,15 @@ export class TypeCarSituationService {
   }
 
   async create(createTypeCarSituationDto: CreateTypeCarSituationDto) {
-    const typeCarSituation = this.typesCarSituationRepository.create(createTypeCarSituationDto);
+    createTypeCarSituationDto.type_cs_name = createTypeCarSituationDto.type_cs_name.toLowerCase()
+    const typeCarSituation = this.typesCarSituationRepository.create(createTypeCarSituationDto)
     return await this.typesCarSituationRepository.save(typeCarSituation);
   }
 
   async findAll(type_cs_name?: string) {
     const typeCarSituationList: Array<TypeCarSituation> = await this.typesCarSituationRepository.find({
       where:{
-        type_cs_name: type_cs_name ? Like(`%${type_cs_name}%`) : type_cs_name
+        type_cs_name: type_cs_name ? Like(`%${type_cs_name.toLowerCase}%`) : type_cs_name
       },
     })
     return typeCarSituationList;

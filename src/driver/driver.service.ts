@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDriverDto } from './dto/create-driver.dto';
 import { UpdateDriverDto } from './dto/update-driver.dto';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Driver } from './entities/driver.entity';
 
@@ -19,10 +19,21 @@ export class DriverService {
     return await this.driversRepository.save(driver);
   }
 
-  async findAll() {
-    return await this.driversRepository.find({
-      relations: ['driverSituation', 'car']
-    });
+  async findAll(dni_driver?: string, driver_name?: string, home_address?: string, category?: string, is_copilot?: boolean, type_driver_situation?: number) {
+    const driverList: Array<Driver> = await this.driversRepository.find({
+      relations: ['driverSituation', 'car'],
+      where:{
+        dni_driver: dni_driver ? Like(`%${dni_driver}%`) : dni_driver,
+        driver_name: driver_name ? Like(`%${driver_name}%`) : driver_name,
+        home_address: home_address ? Like(`%${home_address}%`) : home_address,
+        category: category ? Like(`%${category}%`) : category,
+        is_copilot,
+        driverSituation:{
+          id_aut_type_ds: type_driver_situation
+        },
+      },
+    })
+    return driverList;
   }
 
   async findOne(id_driver: number) {

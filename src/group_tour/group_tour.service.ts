@@ -3,7 +3,7 @@ import { CreateGroupTourDto } from './dto/create-group_tour.dto';
 import { UpdateGroupTourDto } from './dto/update-group_tour.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GroupTour } from './entities/group_tour.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class GroupTourService {
@@ -19,8 +19,15 @@ export class GroupTourService {
     return await this.groupsTourRepository.save(groupTour);
   }
 
-  async findAll() {
-    return await this.groupsTourRepository.find();
+  async findAll(group_code?: number, country?: string, number_of_tourist?: number) {
+    const groupTourList: Array<GroupTour> = await this.groupsTourRepository.find({
+      where:{
+        group_code,
+        group_country: country ? Like(`%${country}%`) : country,
+        number_of_tourist
+      },
+    })
+    return groupTourList;
   }
 
   async findOne(id_group: number) {
