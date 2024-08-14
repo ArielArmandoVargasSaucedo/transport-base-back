@@ -3,7 +3,7 @@ import { CreateSolicitudeDto } from './dto/create-solicitude.dto';
 import { UpdateSolicitudeDto } from './dto/update-solicitude.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Solicitude } from './entities/solicitude.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class SolicitudeService {
@@ -19,16 +19,23 @@ export class SolicitudeService {
     return await this.solicitudesRepository.save(solicitude);
   }
 
-  async findAll() {
-    return await this.solicitudesRepository.find({
-      relations: ['car', 'programmingType', 'groupTour', 'dateD']
+  async findAll(id_car?: number, id_aut_prog_type?: number, id_group?: number, dateD?: Date) {
+    const solicitudeList: Array<Solicitude> = await this.solicitudesRepository.find({
+      relations: ['car', 'programmingType', 'groupTour'],
+      where:{
+        id_car,
+        id_aut_prog_type,
+        id_group,
+        dateD: dateD
+      },
     });
+    return solicitudeList;
   }
 
   async findOne(id_solicitude: number) {
     return await this.solicitudesRepository.findOne({
       where: {id_solicitude},
-      relations: ['car', 'programmingType', 'groupTour', 'dateD']
+      relations: ['car', 'programmingType', 'groupTour']
     });
   }
 

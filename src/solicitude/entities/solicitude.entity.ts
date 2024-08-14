@@ -47,6 +47,4 @@ export class Solicitude {
     @ManyToOne(() => GroupTour, (groupTour) => groupTour.solicitudes)
     @JoinColumn({name: 'id_group'})
     groupTour: GroupTour;
-
-  
 }

@@ -21,17 +21,24 @@ export class CarService {
   }
 
   async findAll(car_number?: string, car_brand?: string, number_of_seats?: number, type_car_situation?: number) {
-    const carList: Array<Car> =  await this.carsRepository.find({
+    let carList: Array<Car> =  await this.carsRepository.find({
       relations: ['carSituation'],
       where:{
         car_number: car_number ? Like(`%${car_number.toUpperCase()}%`) : car_number,
         car_brand: car_brand ? Like(`%${car_brand.toLowerCase()}%`): car_brand,
         number_of_seats,
-        carSituation:{
-          id_aut_type_cs: type_car_situation
-        },
       },
-    });
+    })
+
+    //método para filtrar por la situación actual del carro
+    if(type_car_situation){
+      let list: Array<Car> = []
+      for(let i = 0; i < carList.length; i++){
+        if(carList[i].carSituation[carList[i].carSituation.length-1].id_aut_type_cs == type_car_situation)
+          list.push(carList[i])
+      }
+      carList = list
+    }
     return carList;
   }
 
@@ -46,6 +53,7 @@ export class CarService {
     const car = await this.findOne(id_car)
     if(!car)
       throw new NotFoundException
+    updateCarDto.car_number = updateCarDto.car_number.toUpperCase()
     Object.assign(car, updateCarDto)
     return await this.carsRepository.save(car);
   }

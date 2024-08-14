@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query } from '@nestjs/common';
 import { SolicitudeService } from './solicitude.service';
 import { CreateSolicitudeDto } from './dto/create-solicitude.dto';
 import { UpdateSolicitudeDto } from './dto/update-solicitude.dto';
@@ -12,9 +12,11 @@ export class SolicitudeController {
     return this.solicitudeService.create(createSolicitudeDto);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.solicitudeService.findAll();
+  async findAll(@Query("id_car") id_car: number, @Query("id_aut_prog_type") id_aut_prog_type: number, @Query("id_group") id_group: number,
+  @Query("dateD") dateD: Date) {
+    return this.solicitudeService.findAll(id_car, id_aut_prog_type, id_group, dateD);
   }
 
   @Get(':id')

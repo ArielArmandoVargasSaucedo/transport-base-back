@@ -6,5 +6,5 @@ export class CreateSolicitudeDto {
     id_car: number;
     id_aut_prog_type: number;
     id_group: number;
-    id_aut_date: number;
+    dateD: Date;
 }

@@ -1,6 +1,6 @@
 import { Car } from "src/car/entities/car.entity";
 import { TypeCarSituation } from "src/type_car_situation/entities/type_car_situation.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'car_situation'})
 export class CarSituation {
@@ -16,10 +16,14 @@ export class CarSituation {
     @Column({type: 'integer', nullable: false})
     id_aut_type_cs: number;
 
-    @OneToMany(() => Car, (car) => car.carSituation)
-    cars: Array<Car>;
+    @Column({type: 'integer', nullable: false})
+    id_car: number;
 
     @ManyToOne(() => TypeCarSituation, (typeCarSituation) => typeCarSituation.carSituation)
     @JoinColumn({name: 'id_aut_type_cs'})
     typeCarSituation: TypeCarSituation; 
+
+    @ManyToOne(() => Car, (car) => car.carSituation)
+    @JoinColumn({name: 'id_car'})
+    car: Car;
 }

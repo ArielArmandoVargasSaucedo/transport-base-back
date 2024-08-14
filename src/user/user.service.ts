@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -26,10 +26,16 @@ export class UserService {
     return await this.usersRepository.save(user);
   }
 
-  async findAll() {
-    return await this.usersRepository.find({
-      relations: ['role', 'driver']
-    });
+  async findAll(user_name?: string, dni_user?: string, id_aut_role?: number) {
+    const userList: Array<User> = await this.usersRepository.find({
+      relations: ['role', 'driver'],
+      where:{
+        user_name: user_name ? Like(`%${user_name}%`) : user_name,
+        dni_user: dni_user ? Like(`%${dni_user}%`) : dni_user,
+        id_aut_role
+      },
+    })
+    return userList;
   }
 
   async findOne(id_aut_user: number) {

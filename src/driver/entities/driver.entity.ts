@@ -1,7 +1,7 @@
 import { Car } from "src/car/entities/car.entity";
 import { DriverSituation } from "src/driver_situation/entities/driver_situation.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'driver'})
 export class Driver {
@@ -23,20 +23,16 @@ export class Driver {
     @Column({type: 'boolean', nullable: false})
     is_copilot: boolean;
 
-    @Column({type: 'integer', nullable: false})
-    id_ds: number;
-
     @Column({type: 'integer', nullable: true})
     id_car: number;
 
     @OneToOne(() => User, (user) => user.driver)
     user: User;
 
-    @ManyToOne(() => DriverSituation, (driverSituation) => driverSituation.driver)
-    @JoinColumn({name: 'id_ds'})
-    driverSituation: DriverSituation;
-
     @ManyToOne(() => Car, (car) => car.drivers)
     @JoinColumn({name: 'id_car'})
     car: Car;
+
+    @OneToMany(() => DriverSituation, (driverSituation) => driverSituation.driver)
+    driverSituation: Array<DriverSituation>;
 }
