@@ -18,9 +18,14 @@ export class UserController {
     return this.userService.findAll(user_name, dni_user, id_aut_role);
   }
 
-  @Get(':id')
+  @Get('getUser/:id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
+  }
+
+  @Get('auth')
+  async findOneAuth(@Query("user_name") user_name: string, @Query("password_user") password_user: string){
+    return await this.userService.findOneAuth(user_name, password_user);
   }
 
   @Patch(':id')
