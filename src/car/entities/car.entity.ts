@@ -21,7 +21,7 @@ export class Car {
     drivers: Array<Driver>;
 
     @OneToMany(() => CarSituation, (carSituation) => carSituation.car)
-    carSituation: Array<CarSituation>;
+    carSituations: Array<CarSituation>;
 
     @OneToMany(() => Solicitude, solicitude => solicitude.car)
     solicitudes: Array<Solicitude>;

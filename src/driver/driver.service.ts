@@ -21,7 +21,7 @@ export class DriverService {
 
   async findAll(dni_driver?: string, driver_name?: string, home_address?: string, category?: string, is_copilot?: boolean, type_driver_situation?: number) {
     let driverList: Array<Driver> = await this.driversRepository.find({
-      relations: ['driverSituation', 'car'],
+      relations: ['driverSituations', 'car'],
       where:{
         dni_driver: dni_driver ? Like(`%${dni_driver}%`) : dni_driver,
         driver_name: driver_name ? Like(`%${driver_name}%`) : driver_name,
@@ -35,7 +35,7 @@ export class DriverService {
     if(type_driver_situation){
       let list: Array<Driver> = []
       for(let i = 0; i < driverList.length; i++){
-        if(driverList[i].driverSituation[driverList[i].driverSituation.length-1].id_aut_type_ds == type_driver_situation)
+        if(driverList[i].driverSituations[driverList[i].driverSituations.length-1].id_aut_type_ds == type_driver_situation)
           list.push(driverList[i])
       }
       driverList = list
@@ -46,7 +46,7 @@ export class DriverService {
   async findOne(id_driver: number) {
     return await this.driversRepository.findOne({
       where: {id_driver},
-      relations: ['driverSituation', 'car']
+      relations: ['driverSituations', 'car']
     });
   }
 

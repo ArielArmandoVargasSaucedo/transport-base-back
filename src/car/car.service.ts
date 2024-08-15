@@ -22,7 +22,7 @@ export class CarService {
 
   async findAll(car_number?: string, car_brand?: string, number_of_seats?: number, type_car_situation?: number) {
     let carList: Array<Car> =  await this.carsRepository.find({
-      relations: ['carSituation'],
+      relations: ['carSituations'],
       where:{
         car_number: car_number ? Like(`%${car_number.toUpperCase()}%`) : car_number,
         car_brand: car_brand ? Like(`%${car_brand.toLowerCase()}%`): car_brand,
@@ -34,7 +34,7 @@ export class CarService {
     if(type_car_situation){
       let list: Array<Car> = []
       for(let i = 0; i < carList.length; i++){
-        if(carList[i].carSituation[carList[i].carSituation.length-1].id_aut_type_cs == type_car_situation)
+        if(carList[i].carSituations[carList[i].carSituations.length-1].id_aut_type_cs == type_car_situation)
           list.push(carList[i])
       }
       carList = list
@@ -45,7 +45,7 @@ export class CarService {
   async findOne(id_car: number) {
     return await this.carsRepository.findOne({
       where: {id_car},
-      relations: ['carSituation']
+      relations: ['carSituations']
     });
   }
 

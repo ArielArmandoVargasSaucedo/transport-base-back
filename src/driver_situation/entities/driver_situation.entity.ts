@@ -19,11 +19,11 @@ export class DriverSituation {
     @Column({type: 'integer', nullable: false})
     id_driver: number;
 
-    @ManyToOne(() => TypeDriverSituation, (typeDriverSituation) => typeDriverSituation.driverSituation)
+    @ManyToOne(() => TypeDriverSituation, (typeDriverSituation) => typeDriverSituation.driverSituations)
     @JoinColumn({name: 'id_aut_type_ds'})
     typeDriverSituation: TypeDriverSituation;
 
-    @ManyToOne(() => Driver, (driver) => driver.driverSituation)
+    @ManyToOne(() => Driver, (driver) => driver.driverSituations)
     @JoinColumn({name: 'id_driver'})
     driver: Driver;
 }

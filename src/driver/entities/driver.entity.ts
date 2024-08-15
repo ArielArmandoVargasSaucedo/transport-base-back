@@ -34,5 +34,5 @@ export class Driver {
     car: Car;
 
     @OneToMany(() => DriverSituation, (driverSituation) => driverSituation.driver)
-    driverSituation: Array<DriverSituation>;
+    driverSituations: Array<DriverSituation>;
 }

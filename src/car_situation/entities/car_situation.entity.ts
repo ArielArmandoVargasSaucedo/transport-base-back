@@ -19,11 +19,11 @@ export class CarSituation {
     @Column({type: 'integer', nullable: false})
     id_car: number;
 
-    @ManyToOne(() => TypeCarSituation, (typeCarSituation) => typeCarSituation.carSituation)
+    @ManyToOne(() => TypeCarSituation, (typeCarSituation) => typeCarSituation.carSituations)
     @JoinColumn({name: 'id_aut_type_cs'})
     typeCarSituation: TypeCarSituation; 
 
-    @ManyToOne(() => Car, (car) => car.carSituation)
+    @ManyToOne(() => Car, (car) => car.carSituations)
     @JoinColumn({name: 'id_car'})
     car: Car;
 }

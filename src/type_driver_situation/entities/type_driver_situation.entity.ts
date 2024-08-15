@@ -12,5 +12,5 @@ export class TypeDriverSituation {
 
     @Exclude()
     @OneToMany(() => DriverSituation, (driverSituation) => driverSituation.typeDriverSituation)
-    driverSituation: Array<DriverSituation>;
+    driverSituations: Array<DriverSituation>;
 }
