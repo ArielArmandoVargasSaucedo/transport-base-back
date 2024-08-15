@@ -17,17 +17,21 @@ export class CarService {
   }
 
   async create(createCarDto: CreateCarDto) {
-    createCarDto.car_number = createCarDto.car_brand.toUpperCase()
+    createCarDto.car_number = createCarDto.car_number.toUpperCase()
+    
     const car: Car = this.carsRepository.create(createCarDto)
-
+    // se inserta del carro en la base de datos
+   const carInsertado: Car = await this.carsRepository.save(car);
     //se le asigna el id autoincrementable generado del carro a la situación del carro, estableciento la relación de ambos
     const createCarSituationDto: CreateCarSituationDto = createCarDto.car_situation
-    createCarSituationDto.id_car = car.id_car
-    
-    //se manda el servicio carSituation a insertar la situación del carro
+
+    createCarSituationDto.id_car = carInsertado.id_car
+    // se le asigna la fecha actual
+    createCarSituationDto.current_date_cs = new Date()
+    //se manda el servicio carSituation a insertar la situación del carro en la base de datos
     this.carSituationService.create(createCarSituationDto)
 
-    return await this.carsRepository.save(car);
+    return carInsertado
   }
 
   async findAll(car_number?: string, car_brand?: string, number_of_seats?: number, type_car_situation?: number) {
