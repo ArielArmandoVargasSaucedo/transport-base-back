@@ -23,11 +23,7 @@ export class CarSituation {
     @JoinColumn({name: 'id_aut_type_cs'})
     typeCarSituation: TypeCarSituation; 
 
-<<<<<<< HEAD
-    @ManyToOne(() => Car, (car) => car.carSituations)
-=======
-    @ManyToOne(() => Car, (car) => car.carSituation, {onDelete: 'CASCADE'})
->>>>>>> ecb2b481de0f4e4e95a44c031507c3170f9b711c
+    @ManyToOne(() => Car, (car) => car.carSituations, {onDelete: 'CASCADE'})
     @JoinColumn({name: 'id_car'})
     car: Car;
 }
