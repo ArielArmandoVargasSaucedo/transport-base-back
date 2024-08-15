@@ -16,7 +16,7 @@ export class CarController {
   @Get()
   async findAll(@Query("car_number") car_number: string, @Query("car_brand") car_brand: string, @Query("number_of_seats") number_of_seats: number,
   @Query("type_car_situation") type_car_situation: number) {
-    return this.carService.findAll(car_number, car_brand, number_of_seats, type_car_situation);
+    return await this.carService.findAll(car_number, car_brand, number_of_seats, type_car_situation);
   }
 
   @Get(':id')

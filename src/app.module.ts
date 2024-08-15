@@ -14,6 +14,7 @@ import { SolicitudeModule } from './solicitude/solicitude.module';
 import { ProgrammingTypeModule } from './programming_type/programming_type.module';
 import { GroupTourModule } from './group_tour/group_tour.module';
 import { RouteModule } from './route/route.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { RouteModule } from './route/route.module';
     ProgrammingTypeModule,
     GroupTourModule,
     RouteModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Injectable()
 export class UserService {
@@ -43,6 +44,20 @@ export class UserService {
       where: {id_aut_user},
       relations: ['role', 'driver']
     });
+  }
+
+  //función para obtener un usuario por el nombre de usuario
+  async findOneAuth(user_name?: string, password_user?: string){
+    if(!user_name && !password_user)
+      throw new NotFoundException
+    const user: User = await this.usersRepository.findOne({
+      relations: ['role', 'driver'],
+      where: {user_name}
+    })
+    if(!await bcrypt.compare(password_user, user.password_user)){
+      throw new NotFoundException
+    }
+    return user;
   }
 
   async update(id_aut_user: number, updateUserDto: UpdateUserDto) {

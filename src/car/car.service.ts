@@ -4,6 +4,8 @@ import { UpdateCarDto } from './dto/update-car.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { Car } from './entities/car.entity';
+import { CarSituationService } from 'src/car_situation/car_situation.service';
+import { CreateCarSituationDto } from 'src/car_situation/dto/create-car_situation.dto';
 
 @Injectable()
 export class CarService {
@@ -11,13 +13,25 @@ export class CarService {
   constructor(
     @InjectRepository(Car)
     private readonly carsRepository:
-    Repository<Car>){
+    Repository<Car>, private readonly carSituationService: CarSituationService){
   }
 
   async create(createCarDto: CreateCarDto) {
-    createCarDto.car_number = createCarDto.car_brand.toUpperCase()
-    const car = this.carsRepository.create(createCarDto)
-    return await this.carsRepository.save(car);
+    createCarDto.car_number = createCarDto.car_number.toUpperCase()
+    
+    const car: Car = this.carsRepository.create(createCarDto)
+    // se inserta del carro en la base de datos
+   const carInsertado: Car = await this.carsRepository.save(car);
+    //se le asigna el id autoincrementable generado del carro a la situación del carro, estableciento la relación de ambos
+    const createCarSituationDto: CreateCarSituationDto = createCarDto.car_situation
+
+    createCarSituationDto.id_car = carInsertado.id_car
+    // se le asigna la fecha actual
+    createCarSituationDto.current_date_cs = new Date()
+    //se manda el servicio carSituation a insertar la situación del carro en la base de datos
+    this.carSituationService.create(createCarSituationDto)
+
+    return carInsertado
   }
 
   async findAll(car_number?: string, car_brand?: string, number_of_seats?: number, type_car_situation?: number) {

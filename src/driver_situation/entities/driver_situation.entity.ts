@@ -23,7 +23,11 @@ export class DriverSituation {
     @JoinColumn({name: 'id_aut_type_ds'})
     typeDriverSituation: TypeDriverSituation;
 
+<<<<<<< HEAD
     @ManyToOne(() => Driver, (driver) => driver.driverSituations)
+=======
+    @ManyToOne(() => Driver, (driver) => driver.driverSituation, {onDelete: 'CASCADE'})
+>>>>>>> ecb2b481de0f4e4e95a44c031507c3170f9b711c
     @JoinColumn({name: 'id_driver'})
     driver: Driver;
 }
