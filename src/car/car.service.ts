@@ -81,6 +81,14 @@ export class CarService {
     if (!car)
       throw new NotFoundException
     updateCarDto.car_number = updateCarDto.car_number.toUpperCase()
+
+    //Crear la situación del carro en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
+    if(updateCarDto.car_situation.id_aut_type_cs != car.car_situation.type_car_situation.id_aut_type_cs || 
+      updateCarDto.car_situation.return_date_cs != car.car_situation.return_date_cs){
+        const createCarSituationDto: CreateCarSituationDto = updateCarDto.car_situation
+        createCarSituationDto.id_car = id_car
+        this.carSituationService.create(createCarSituationDto)
+      }
     Object.assign(car, updateCarDto)
     return await this.carsRepository.save(car);
   }

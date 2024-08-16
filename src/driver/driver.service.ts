@@ -28,8 +28,6 @@ export class DriverService {
     const driverSituation: CreateDriverSituationDto = createDriverDto.driver_situation
     // se asigna el id del driver insertado a la situación del driver
     driverSituation.id_driver = driverInsertado.id_driver
-    // se asigna la fecha del sistema
-    driverSituation.current_date_ds = new Date()
     // se manda al servicio de situaciones de drivers a insertar la situación del driver en la base de datos
     this.driverSituationService.create(driverSituation)
 
