@@ -30,7 +30,7 @@ export class CarController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.carService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.carService.remove(+id);
   }
 }
