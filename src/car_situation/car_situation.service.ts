@@ -18,6 +18,9 @@ export class CarSituationService {
   }
 
   async create(createCarSituationDto: CreateCarSituationDto) {
+    // se le asigna la fecha actual
+    createCarSituationDto.current_date_cs = new Date()
+    
     const carSituation = this.carSituationsRepository.create(createCarSituationDto)
     return await this.carSituationsRepository.save(carSituation);
   }
