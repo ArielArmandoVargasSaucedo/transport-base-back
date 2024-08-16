@@ -8,15 +8,15 @@ export class DriverController {
   constructor(private readonly driverService: DriverService) {}
 
   @Post()
-  create(@Body() createDriverDto: CreateDriverDto) {
-    return this.driverService.create(createDriverDto);
+  async create(@Body() createDriverDto: CreateDriverDto) {
+    return await this.driverService.create(createDriverDto);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async findAll(@Query("dni_driver") dni_driver: string, @Query("driver_name") driver_name: string, @Query("home_address") home_address: string,
-  @Query("category") category: string, @Query("is_copilot") is_copilot: boolean, @Query("type_driver_situation") type_driver_situation: number) {
-    return this.driverService.findAll(dni_driver, driver_name, home_address, category, is_copilot, type_driver_situation);
+  @Query("is_copilot") is_copilot: boolean, @Query("type_driver_situation") type_driver_situation: number) {
+    return this.driverService.findAll(dni_driver, driver_name, home_address, is_copilot, type_driver_situation);
   }
 
   @Get(':id')

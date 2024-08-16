@@ -17,9 +17,6 @@ export class Driver {
     @Column({type: 'varchar', nullable: false})
     home_address: string;
 
-    @Column({type: 'varchar', nullable: false})
-    category: string;
-
     @Column({type: 'boolean', nullable: false})
     is_copilot: boolean;
 
