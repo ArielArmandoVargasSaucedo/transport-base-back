@@ -29,8 +29,7 @@ export class CarService {
     const createCarSituationDto: CreateCarSituationDto = createCarDto.car_situation
 
     createCarSituationDto.id_car = carInsertado.id_car
-    // se le asigna la fecha actual
-    createCarSituationDto.current_date_cs = new Date()
+    
     //se manda el servicio carSituation a insertar la situación del carro en la base de datos
     this.carSituationService.create(createCarSituationDto)
 
