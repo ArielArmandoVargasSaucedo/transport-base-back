@@ -46,7 +46,7 @@ export class UserService {
     });
   }
 
-  //función para obtener un usuario por el nombre de usuario
+  //Función para obtener un usuario por el nombre de usuario
   async findOneAuth(user_name?: string, password_user?: string){
     if(!user_name && !password_user)
       throw new NotFoundException

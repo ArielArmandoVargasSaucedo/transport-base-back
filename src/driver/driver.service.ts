@@ -29,7 +29,7 @@ export class DriverService {
     // se asigna el id del driver insertado a la situación del driver
     driverSituation.id_driver = driverInsertado.id_driver
     // se manda al servicio de situaciones de drivers a insertar la situación del driver en la base de datos
-    this.driverSituationService.create(driverSituation)
+    await this.driverSituationService.create(driverSituation)
 
     return driverInsertado
   }
@@ -71,6 +71,14 @@ export class DriverService {
     const driver = await this.findOne(id_driver)
     if (!driver)
       throw new NotFoundException
+
+    //Crear la situación del chofer en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
+    if(updateDriverDto.driver_situation.id_aut_type_ds != driver.driverSituations[driver.driverSituations.length-1].id_aut_type_ds || 
+      updateDriverDto.driver_situation.return_date_ds != driver.driverSituations[driver.driverSituations.length-1].return_date_ds){
+      const driverSituation: CreateDriverSituationDto = updateDriverDto.driver_situation
+      driverSituation.id_driver = id_driver
+      await this.driverSituationService.create(driverSituation)
+    }
     Object.assign(driver, updateDriverDto)
     return await this.driversRepository.save(driver);
   }
