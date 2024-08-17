@@ -19,6 +19,15 @@ export class CarService {
 
   async create(createCarDto: CreateCarDto) {
     try{
+      if(createCarDto.car_number.length != 7)
+        throw new HttpException('El número del carro debe tener 7 caracteres', HttpStatus.BAD_REQUEST)
+      if(!/^[^*_\[\]'"]+$/.test(createCarDto.car_number) || !/^[^0-9]+$/.test(createCarDto.car_number[0]) || !/^\d+$/.test(createCarDto.car_number.slice(-6)))
+        throw new HttpException('El número del carro debe contener números en sus 6 últimos caracteres', HttpStatus.BAD_REQUEST)
+      if(createCarDto.car_brand.length < 3)
+        throw new HttpException('La marca del carro debe tener al menos 2 caracteres', HttpStatus.BAD_REQUEST)
+      else if (!/^[^*_\[\]'"]+$/.test(createCarDto.car_brand) || !/^[^0-9]+$/.test(createCarDto.car_brand))
+        throw new HttpException('La marca del carro solo debe tener letras', HttpStatus.BAD_REQUEST)
+
       // se envuelve esta transacción en una operación (***HACER***)
       createCarDto.car_number = createCarDto.car_number.toUpperCase()
       const car: Car = this.carsRepository.create(createCarDto)
@@ -34,7 +43,7 @@ export class CarService {
       return carInsertado;
     } catch(error) {
       if(error.code == '23505'){
-        if (error.detail.includes('car_number'))
+        if(error.detail.includes('car_number'))
           throw new HttpException('El número del carro ya existe.', HttpStatus.BAD_REQUEST);
       }
       throw error;
@@ -83,20 +92,38 @@ export class CarService {
   }
 
   async update(id_car: number, updateCarDto: UpdateCarDto) {
-    const car = await this.findOne(id_car)
-    if (!car)
-      throw new NotFoundException
-    updateCarDto.car_number = updateCarDto.car_number.toUpperCase()
+    try {
+      if(updateCarDto.car_number.length != 7)
+        throw new HttpException('El número del carro debe tener 7 caracteres', HttpStatus.BAD_REQUEST)
+      if(!/^[^*_\[\]'"]+$/.test(updateCarDto.car_number) || !/^[^0-9]+$/.test(updateCarDto.car_number[0]) || !/^\d+$/.test(updateCarDto.car_number.slice(-6)))
+        throw new HttpException('El número del carro debe contener números en sus 6 últimos caracteres', HttpStatus.BAD_REQUEST)
+      if(updateCarDto.car_brand.length < 3)
+        throw new HttpException('La marca del carro debe tener al menos 2 caracteres', HttpStatus.BAD_REQUEST)
+      else if (!/^[^*_\[\]'"]+$/.test(updateCarDto.car_brand) || !/^[^0-9]+$/.test(updateCarDto.car_brand))
+        throw new HttpException('La marca del carro solo debe tener letras', HttpStatus.BAD_REQUEST)
 
-    //Crear la situación del carro en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
-    if (updateCarDto.car_situation.id_aut_type_cs != car.car_situation.type_car_situation.id_aut_type_cs ||
-      updateCarDto.car_situation.return_date_cs != car.car_situation.return_date_cs) {
-      const createCarSituationDto: CreateCarSituationDto = updateCarDto.car_situation
-      createCarSituationDto.id_car = id_car
-      await this.carSituationService.create(createCarSituationDto)
+      const car = await this.findOne(id_car)
+      if (!car)
+        throw new NotFoundException
+      updateCarDto.car_number = updateCarDto.car_number.toUpperCase()
+
+      //Crear la situación del carro en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
+      if (updateCarDto.car_situation.id_aut_type_cs != car.car_situation.type_car_situation.id_aut_type_cs ||
+        updateCarDto.car_situation.return_date_cs != car.car_situation.return_date_cs) {
+        const createCarSituationDto: CreateCarSituationDto = updateCarDto.car_situation
+        createCarSituationDto.id_car = id_car
+        await this.carSituationService.create(createCarSituationDto)
+      }
+      Object.assign(car, updateCarDto)
+      return await this.carsRepository.save(car);
+    } catch(error){
+      if(error.code == '23505'){
+        if(error.detail.includes('car_number'))
+          throw new HttpException('El número del carro ya existe.', HttpStatus.BAD_REQUEST);
+      }
+      throw error;
     }
-    Object.assign(car, updateCarDto)
-    return await this.carsRepository.save(car);
+    
   }
 
   async remove(id_car: number) {

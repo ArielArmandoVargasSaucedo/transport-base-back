@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDriverDto } from './dto/create-driver.dto';
 import { UpdateDriverDto } from './dto/update-driver.dto';
 import { Like, Repository } from 'typeorm';
@@ -20,18 +20,32 @@ export class DriverService {
   }
 
   async create(createDriverDto: CreateDriverDto) {
-    // se envuelve esta operación en una transacción
-    const driver = this.driversRepository.create(createDriverDto)
-    // se inserta al driver en la base de datos
-    const driverInsertado: Driver = await this.driversRepository.save(driver)
-    // se obtiene la situación del driver a insertar
-    const driverSituation: CreateDriverSituationDto = createDriverDto.driver_situation
-    // se asigna el id del driver insertado a la situación del driver
-    driverSituation.id_driver = driverInsertado.id_driver
-    // se manda al servicio de situaciones de drivers a insertar la situación del driver en la base de datos
-    await this.driverSituationService.create(driverSituation)
+    try{
+      if (createDriverDto.dni_driver.length !== 11)
+        throw new HttpException('El dni del chofer debe tener 11 caracteres', HttpStatus.BAD_REQUEST)
+      else if (!/^\d+$/.test(createDriverDto.dni_driver) || !/^[^*_\[\]'"]+$/.test(createDriverDto.dni_driver))
+        throw new HttpException('El dni del chofer debe contener solo números', HttpStatus.BAD_REQUEST)
+      else if (createDriverDto.driver_name.length < 3)
+        throw new HttpException('El nombre del chofer debe tener al menos 3 caracteres', HttpStatus.BAD_REQUEST)
+      else if (!/^[^0-9]+$/.test(createDriverDto.driver_name) || !/^[^*_\[\]'"]+$/.test(createDriverDto.driver_name))
+        throw new HttpException('El nombre del chofer solo debe contener letras', HttpStatus.BAD_REQUEST)
+      else if (createDriverDto.home_address.length < 3)
+        throw new HttpException('La dirección del chofer debe tener al menos 3 caracteres', HttpStatus.BAD_REQUEST)
+      
+      const driver = this.driversRepository.create(createDriverDto)// se envuelve esta operación en una transacción
+      const driverInsertado: Driver = await this.driversRepository.save(driver)// se inserta al driver en la base de datos
+      const driverSituation: CreateDriverSituationDto = createDriverDto.driver_situation// se obtiene la situación del driver a insertar
+      driverSituation.id_driver = driverInsertado.id_driver// se asigna el id del driver insertado a la situación del driver
+      await this.driverSituationService.create(driverSituation)// se manda al servicio de situaciones de drivers a insertar la situación del driver
 
-    return driverInsertado
+      return driverInsertado;
+    }catch(error){
+      if (error.code == '23505') {
+        if(error.detail.includes('dni_driver'))
+          throw new HttpException('El dni del chofer ya existe.', HttpStatus.BAD_REQUEST);
+      }
+      throw error;
+    }
   }
 
   async findAll(dni_driver?: string, driver_name?: string, home_address?: string, is_copilot?: boolean, type_driver_situation?: number) {
@@ -51,7 +65,7 @@ export class DriverService {
     // se construyen cars serilizables por cada car entity
     for (let i = 0; i < driverList.length; i++) {
       const driver = driverList[i]
-      if (!type_driver_situation || driver.driverSituations[driver.driverSituations.length - 1].id_aut_type_ds === type_driver_situation) // se filtra por car situation
+      if (!type_driver_situation || driver.driverSituations[driver.driverSituations.length - 1].id_aut_type_ds === type_driver_situation) // se filtra por driver situation
         listDriverSerializable.push(new DriverSerializable(driver.id_driver, driver.dni_driver, driver.driver_name,
           driver.home_address, driver.is_copilot,
           await this.driverSituationService.findOne(
@@ -69,18 +83,36 @@ export class DriverService {
 
   async update(id_driver: number, updateDriverDto: UpdateDriverDto) {
     const driver = await this.findOne(id_driver)
-    if (!driver)
-      throw new NotFoundException
+      if (!driver)
+        throw new HttpException('El chofer no existe en la base de datos', HttpStatus.BAD_REQUEST)
+    try{
+      if (updateDriverDto.dni_driver.length !== 11)
+        throw new HttpException('El dni del chofer debe tener 11 caracteres', HttpStatus.BAD_REQUEST)
+      else if (!/^\d+$/.test(updateDriverDto.dni_driver) || !/^[^*_\[\]'"]+$/.test(updateDriverDto.dni_driver))
+        throw new HttpException('El dni del chofer debe contener solo números', HttpStatus.BAD_REQUEST)
+      else if (updateDriverDto.driver_name.length < 3)
+        throw new HttpException('El nombre del chofer debe tener al menos 3 caracteres', HttpStatus.BAD_REQUEST)
+      else if (!/^[^0-9]+$/.test(updateDriverDto.driver_name) || !/^[^*_\[\]'"]+$/.test(updateDriverDto.driver_name))
+        throw new HttpException('El nombre del chofer solo debe contener letras', HttpStatus.BAD_REQUEST)
+      else if (updateDriverDto.home_address.length < 3)
+        throw new HttpException('La dirección del chofer debe tener al menos 3 caracteres', HttpStatus.BAD_REQUEST)
 
-    //Crear la situación del chofer en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
-    if(updateDriverDto.driver_situation.id_aut_type_ds != driver.driverSituations[driver.driverSituations.length-1].id_aut_type_ds || 
-      updateDriverDto.driver_situation.return_date_ds != driver.driverSituations[driver.driverSituations.length-1].return_date_ds){
-      const driverSituation: CreateDriverSituationDto = updateDriverDto.driver_situation
-      driverSituation.id_driver = id_driver
-      await this.driverSituationService.create(driverSituation)
+      //Crear la situación del chofer en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
+      if(updateDriverDto.driver_situation.id_aut_type_ds != driver.driverSituations[driver.driverSituations.length-1].id_aut_type_ds || 
+        updateDriverDto.driver_situation.return_date_ds != driver.driverSituations[driver.driverSituations.length-1].return_date_ds){
+        const driverSituation: CreateDriverSituationDto = updateDriverDto.driver_situation
+        driverSituation.id_driver = id_driver
+        await this.driverSituationService.create(driverSituation)
+      }
+      Object.assign(driver, updateDriverDto)
+      return await this.driversRepository.save(driver);
+    } catch(error) {
+      if (error.code == '23505') {
+        if(error.detail.includes('dni_driver'))
+          throw new HttpException('El dni del chofer ya existe.', HttpStatus.BAD_REQUEST);
+      }
+      throw error;
     }
-    Object.assign(driver, updateDriverDto)
-    return await this.driversRepository.save(driver);
   }
 
   async remove(id_driver: number) {
