@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,22 +18,28 @@ export class CarService {
   }
 
   async create(createCarDto: CreateCarDto) {
-    // se envuelve esta transacción en una operación (***HACER***)
+    try{
+      // se envuelve esta transacción en una operación (***HACER***)
+      createCarDto.car_number = createCarDto.car_number.toUpperCase()
+      const car: Car = this.carsRepository.create(createCarDto)
+      // se inserta del carro en la base de datos
+      const carInsertado: Car = await this.carsRepository.save(car);
+      //se le asigna el id autoincrementable generado del carro a la situación del carro, estableciento la relación de ambos
+      const createCarSituationDto: CreateCarSituationDto = createCarDto.car_situation
+      createCarSituationDto.id_car = carInsertado.id_car
 
-    createCarDto.car_number = createCarDto.car_number.toUpperCase()
+      //se manda el servicio carSituation a insertar la situación del carro en la base de datos
+      await this.carSituationService.create(createCarSituationDto)
 
-    const car: Car = this.carsRepository.create(createCarDto)
-    // se inserta del carro en la base de datos
-    const carInsertado: Car = await this.carsRepository.save(car);
-    //se le asigna el id autoincrementable generado del carro a la situación del carro, estableciento la relación de ambos
-    const createCarSituationDto: CreateCarSituationDto = createCarDto.car_situation
-
-    createCarSituationDto.id_car = carInsertado.id_car
-
-    //se manda el servicio carSituation a insertar la situación del carro en la base de datos
-    this.carSituationService.create(createCarSituationDto)
-
-    return carInsertado
+      return carInsertado;
+    } catch(error) {
+      if(error.code == '23505'){
+        if (error.detail.includes('car_number'))
+          throw new HttpException('El número del carro ya existe.', HttpStatus.BAD_REQUEST);
+      }
+      throw error;
+    }
+    
   }
 
   async findAll(car_number?: string, car_brand?: string, number_of_seats?: number, type_car_situation?: number) {
