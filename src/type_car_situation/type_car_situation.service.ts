@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTypeCarSituationDto } from './dto/create-type_car_situation.dto';
 import { UpdateTypeCarSituationDto } from './dto/update-type_car_situation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,9 +16,17 @@ export class TypeCarSituationService {
   }
 
   async create(createTypeCarSituationDto: CreateTypeCarSituationDto) {
-    createTypeCarSituationDto.type_cs_name = createTypeCarSituationDto.type_cs_name.toLowerCase()
-    const typeCarSituation = this.typesCarSituationRepository.create(createTypeCarSituationDto)
-    return await this.typesCarSituationRepository.save(typeCarSituation);
+    try {
+      createTypeCarSituationDto.type_cs_name = createTypeCarSituationDto.type_cs_name.toLowerCase()
+      const typeCarSituation = this.typesCarSituationRepository.create(createTypeCarSituationDto)
+      return await this.typesCarSituationRepository.save(typeCarSituation);
+    } catch(error) {
+      if(error.code == '23505'){
+        if(error.detail.includes('type_cs_name'))
+          throw new HttpException('El tipo se situación del carro ya existe', HttpStatus.BAD_REQUEST)
+      }
+      throw error;
+    }
   }
 
   async findAll(type_cs_name?: string) {
@@ -40,11 +48,19 @@ export class TypeCarSituationService {
   }
 
   async update(id_aut_type_cs: number, updateTypeCarSituationDto: UpdateTypeCarSituationDto) {
-    const typeCarSituation = await this.findOne(id_aut_type_cs)
-    if (!typeCarSituation)
-      throw new NotFoundException
-    Object.assign(typeCarSituation, updateTypeCarSituationDto)
-    return await this.typesCarSituationRepository.save(typeCarSituation);
+    try {
+      const typeCarSituation = await this.findOne(id_aut_type_cs)
+      if (!typeCarSituation)
+        throw new NotFoundException
+      Object.assign(typeCarSituation, updateTypeCarSituationDto)
+      return await this.typesCarSituationRepository.save(typeCarSituation);
+    } catch(error) {
+      if(error.code == '23505'){
+        if(error.detail.includes('type_cs_name'))
+          throw new HttpException('El tipo se situación del carro ya existe', HttpStatus.BAD_REQUEST)
+      }
+      throw error;
+    }
   }
 
   async remove(id_aut_type_cs: number) {

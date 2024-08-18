@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProgrammingTypeDto } from './dto/create-programming_type.dto';
 import { UpdateProgrammingTypeDto } from './dto/update-programming_type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,9 +15,16 @@ export class ProgrammingTypeService {
   }
 
   async create(createProgrammingTypeDto: CreateProgrammingTypeDto) {
-    createProgrammingTypeDto.prog_type_name = createProgrammingTypeDto.prog_type_name.toLowerCase()
-    const programmingType = this.programmingTypesRepository.create(createProgrammingTypeDto)
-    return await this.programmingTypesRepository.save(programmingType);
+    try {
+      createProgrammingTypeDto.prog_type_name = createProgrammingTypeDto.prog_type_name.toLowerCase()
+      const programmingType = this.programmingTypesRepository.create(createProgrammingTypeDto)
+      return await this.programmingTypesRepository.save(programmingType);
+    } catch(error) {
+      if(error.code == '23505'){
+        if(error.detail.includes('prog_type_name'))
+          throw new HttpException('El tipo de programación ya existe', HttpStatus.BAD_REQUEST)
+      }
+    }
   }
 
   async findAll(prog_type_name: string) {
@@ -34,11 +41,18 @@ export class ProgrammingTypeService {
   }
 
   async update(id_aut_prog_type: number, updateProgrammingTypeDto: UpdateProgrammingTypeDto) {
-    const programmingType = await this.findOne(id_aut_prog_type)
-    if(!programmingType)
-      throw new NotFoundException
-    Object.assign(programmingType, updateProgrammingTypeDto)
-    return await this.programmingTypesRepository.save(programmingType);
+    try {
+      const programmingType = await this.findOne(id_aut_prog_type)
+      if(!programmingType)
+        throw new NotFoundException
+      Object.assign(programmingType, updateProgrammingTypeDto)
+      return await this.programmingTypesRepository.save(programmingType);
+    } catch(error) {
+      if(error.code == '23505'){
+        if(error.detail.includes('prog_type_name'))
+          throw new HttpException('El tipo de programación ya existe', HttpStatus.BAD_REQUEST)
+      }
+    }
   }
 
   async remove(id_aut_prog_type: number) {

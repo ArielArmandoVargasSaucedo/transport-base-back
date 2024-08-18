@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTypeDriverSituationDto } from './dto/create-type_driver_situation.dto';
 import { UpdateTypeDriverSituationDto } from './dto/update-type_driver_situation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,9 +16,17 @@ export class TypeDriverSituationService {
   }
 
   async create(createTypeDriverSituationDto: CreateTypeDriverSituationDto) {
-    createTypeDriverSituationDto.type_ds_name = createTypeDriverSituationDto.type_ds_name.toLowerCase()
-    const typeDriverSituation = this.typesDriverSituationRepository.create(createTypeDriverSituationDto)
-    return await this.typesDriverSituationRepository.save(typeDriverSituation);
+    try {
+      createTypeDriverSituationDto.type_ds_name = createTypeDriverSituationDto.type_ds_name.toLowerCase()
+      const typeDriverSituation = this.typesDriverSituationRepository.create(createTypeDriverSituationDto)
+      return await this.typesDriverSituationRepository.save(typeDriverSituation);
+    } catch(error) {
+      if(error.code == '23505'){
+        if(error.detail.includes('type_ds_name'))
+          throw new HttpException('El tipo de situación del chofer ya existe', HttpStatus.BAD_REQUEST)
+      }
+      throw error;
+    }
   }
 
   async findAll(type_ds_name?: string) {
@@ -41,11 +49,19 @@ export class TypeDriverSituationService {
   }
 
   async update(id_aut_type_ds: number, updateTypeDriverSituationDto: UpdateTypeDriverSituationDto) {
-    const typeDriverSituation = await this.findOne(id_aut_type_ds)
-    if (!typeDriverSituation)
-      throw new NotFoundException
-    Object.assign(typeDriverSituation, updateTypeDriverSituationDto)
-    return await this.typesDriverSituationRepository.save(typeDriverSituation);
+    try {
+      const typeDriverSituation = await this.findOne(id_aut_type_ds)
+      if (!typeDriverSituation)
+        throw new NotFoundException
+      Object.assign(typeDriverSituation, updateTypeDriverSituationDto)
+      return await this.typesDriverSituationRepository.save(typeDriverSituation);
+    } catch(error) {
+      if(error.code == '23505'){
+        if(error.detail.includes('type_ds_name'))
+          throw new HttpException('El tipo de situación del chofer ya existe', HttpStatus.BAD_REQUEST)
+      }
+      throw error;
+    }
   }
 
   async remove(id_aut_type_ds: number) {

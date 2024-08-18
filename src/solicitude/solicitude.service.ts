@@ -3,7 +3,7 @@ import { CreateSolicitudeDto } from './dto/create-solicitude.dto';
 import { UpdateSolicitudeDto } from './dto/update-solicitude.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Solicitude } from './entities/solicitude.entity';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SolicitudeService {
