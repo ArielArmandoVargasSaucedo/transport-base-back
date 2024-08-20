@@ -12,8 +12,8 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository:
-    Repository<User>){
-    }
+      Repository<User>) {
+  }
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -27,15 +27,15 @@ export class UserService {
         throw new HttpException('La contraseña del usuario debe tener al menos 8 caracteres', HttpStatus.BAD_REQUEST)
 
       const user = this.usersRepository.create(createUserDto)
-    
+
       //Encriptar contraseña
       const saltOrRounds = 10
       const hash = await bcrypt.hash(user.password_user, saltOrRounds)
       user.password_user = hash
 
       return await this.usersRepository.save(user);
-    } catch(error) {
-      if (error.code == '23505'){
+    } catch (error) {
+      if (error.code == '23505') {
         if (error.detail.includes('user_name'))
           throw new HttpException('El nombre de usuario ya existe', HttpStatus.BAD_REQUEST)
         else if (error.detail.includes('dni_user'))
@@ -48,7 +48,7 @@ export class UserService {
   async findAll(user_name?: string, dni_user?: string, id_aut_role?: number) {
     const userList: Array<User> = await this.usersRepository.find({
       relations: ['role', 'driver'],
-      where:{
+      where: {
         user_name: user_name ? Like(`%${user_name}%`) : user_name,
         dni_user: dni_user ? Like(`%${dni_user}%`) : dni_user,
         id_aut_role
@@ -59,21 +59,24 @@ export class UserService {
 
   async findOne(id_aut_user: number) {
     return await this.usersRepository.findOne({
-      where: {id_aut_user},
+      where: { id_aut_user },
       relations: ['role', 'driver']
     });
   }
 
   //Función para obtener un usuario por el nombre de usuario
-  async findOneAuth(user_name?: string, password_user?: string){
-    if(!user_name && !password_user)
-      throw new NotFoundException
-    const user: User = await this.usersRepository.findOne({
+  async findOneAuth(user_name?: string, password_user?: string) {
+    if (!user_name && !password_user)
+      throw new HttpException('Se necesita proporcionar  nombre de usuario y contraseña', HttpStatus.BAD_REQUEST)
+    const user: User | undefined = await this.usersRepository.findOne({
       relations: ['role', 'driver'],
-      where: {user_name}
+      where: { user_name }
     })
-    if(!await bcrypt.compare(password_user, user.password_user)){
-      throw new NotFoundException
+    if (!user)
+      throw new HttpException('Nombre de usuario o contraseña incorrecta', HttpStatus.BAD_REQUEST)
+    // si se encontró un usuario con ese nombre
+    if (!await bcrypt.compare(password_user, user.password_user)) {
+      throw new HttpException('Nombre de usuario o contraseña incorrecta', HttpStatus.BAD_REQUEST)
     }
     return user;
   }
@@ -90,7 +93,7 @@ export class UserService {
         throw new HttpException('La contraseña del usuario debe tener al menos 8 caracteres', HttpStatus.BAD_REQUEST)
 
       const user = await this.findOne(id_aut_user)
-      if(!user)
+      if (!user)
         throw new NotFoundException
       Object.assign(user, updateUserDto)
 
@@ -98,10 +101,10 @@ export class UserService {
       const saltOrRounds = 10
       const hash = await bcrypt.hash(user.password_user, saltOrRounds)
       user.password_user = hash
-    
+
       return await this.usersRepository.save(user);
-    } catch(error) {
-      if (error.code == '23505'){
+    } catch (error) {
+      if (error.code == '23505') {
         if (error.detail.includes('user_name'))
           throw new HttpException('El nombre de usuario ya existe', HttpStatus.BAD_REQUEST)
         else if (error.detail.includes('dni_user'))
@@ -113,7 +116,7 @@ export class UserService {
 
   async remove(id_aut_user: number) {
     const user = await this.findOne(id_aut_user)
-    if(!user)
+    if (!user)
       throw new NotFoundException
     return await this.usersRepository.delete(id_aut_user);
   }
