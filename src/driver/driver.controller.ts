@@ -14,9 +14,10 @@ export class DriverController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(@Query("dni_driver") dni_driver: string, @Query("driver_name") driver_name: string, @Query("home_address") home_address: string,
-  @Query("is_copilot") is_copilot: boolean, @Query("type_driver_situation") type_driver_situation: number) {
-    return this.driverService.findAll(dni_driver, driver_name, home_address, is_copilot, type_driver_situation);
+  async findAll(@Query("dni_driver") dni_driver: string, @Query("driver_name") driver_name: string, 
+  @Query("type_driver_situation") type_driver_situation: string, @Query("id_car") id_car: string) {
+    return this.driverService.findAll(dni_driver, driver_name, 
+      type_driver_situation ? +type_driver_situation : undefined, id_car ? +id_car : undefined);
   }
 
   @Get(':id')
@@ -25,8 +26,9 @@ export class DriverController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDriverDto: UpdateDriverDto) {
-    return this.driverService.update(+id, updateDriverDto);
+  async update(@Param('id') id: string, @Body() updateDriverDto: UpdateDriverDto) {
+    await this.driverService.update(+id, updateDriverDto);
+    return {succes: true}
   }
 
   @Delete(':id')

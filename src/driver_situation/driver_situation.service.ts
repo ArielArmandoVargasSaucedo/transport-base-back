@@ -22,6 +22,7 @@ export class DriverSituationService {
     createDriverSituationDto.current_date_ds = new Date()
     
     const driverSituation = this.driverSituationsRepository.create(createDriverSituationDto)
+    
     return await this.driverSituationsRepository.save(driverSituation);
   }
 

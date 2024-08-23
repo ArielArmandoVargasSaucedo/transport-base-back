@@ -48,16 +48,16 @@ export class DriverService {
     }
   }
 
-  async findAll(dni_driver?: string, driver_name?: string, home_address?: string, is_copilot?: boolean, type_driver_situation?: number) {
+  async findAll(dni_driver?: string, driver_name?: string, type_driver_situation?: number, id_car?: number) {
     let driverList: Array<Driver> = await this.driversRepository.find({
       relations: ['driverSituations', 'car'],
       where: {
         dni_driver: dni_driver ? Like(`%${dni_driver}%`) : dni_driver,
         driver_name: driver_name ? Like(`%${driver_name}%`) : driver_name,
-        home_address: home_address ? Like(`%${home_address}%`) : home_address,
-        is_copilot
+        id_car: id_car
       },
     })
+   
 
     // se crea la lista de retorno
     let listDriverSerializable: Array<DriverSerializable> = Array<DriverSerializable>()
@@ -69,8 +69,9 @@ export class DriverService {
         listDriverSerializable.push(new DriverSerializable(driver.id_driver, driver.dni_driver, driver.driver_name,
           driver.home_address, driver.is_copilot,
           await this.driverSituationService.findOne(
-            driver.driverSituations[driver.driverSituations.length - 1].id_ds), await this.carSerive.findOne(driver.id_car)))
+            driver.driverSituations[driver.driverSituations.length - 1].id_ds), await this.carSerive.findOneSerializable(driver.id_car)))
     }
+   
     return listDriverSerializable;
   }
 
@@ -97,15 +98,19 @@ export class DriverService {
       else if (updateDriverDto.home_address.length < 3)
         throw new HttpException('La dirección del chofer debe tener al menos 3 caracteres', HttpStatus.BAD_REQUEST)
 
+      // se actualiza la infomración del driver en la base de datos
+      Object.assign(driver, updateDriverDto)
+      driver.car = undefined // *****se descubrió la cura del cancer****** (posdata: por segunda vez)
+      await this.driversRepository.save(driver);
+      
       //Crear la situación del chofer en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
-      if(updateDriverDto.driver_situation.id_aut_type_ds != driver.driverSituations[driver.driverSituations.length-1].id_aut_type_ds || 
-        updateDriverDto.driver_situation.return_date_ds != driver.driverSituations[driver.driverSituations.length-1].return_date_ds){
+      if(updateDriverDto.driver_situation.id_aut_type_ds !== driver.driverSituations[driver.driverSituations.length-1].id_aut_type_ds || 
+        updateDriverDto.driver_situation.return_date_ds !== driver.driverSituations[driver.driverSituations.length-1].return_date_ds){
         const driverSituation: CreateDriverSituationDto = updateDriverDto.driver_situation
         driverSituation.id_driver = id_driver
         await this.driverSituationService.create(driverSituation)
       }
-      Object.assign(driver, updateDriverDto)
-      return await this.driversRepository.save(driver);
+      
     } catch(error) {
       if (error.code == '23505') {
         if(error.detail.includes('dni_driver'))
