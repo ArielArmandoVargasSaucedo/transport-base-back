@@ -54,7 +54,6 @@ export class UserService {
         id_aut_role
       },
     })
-    
     return userList.filter((user)=>{
       return user.id_aut_user !== id_applicant
     });
