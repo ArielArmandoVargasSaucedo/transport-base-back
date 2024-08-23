@@ -45,7 +45,7 @@ export class UserService {
     }
   }
 
-  async findAll(user_name?: string, dni_user?: string, id_aut_role?: number) {
+  async findAll(user_name?: string, dni_user?: string, id_aut_role?: number, id_applicant?: number) {
     const userList: Array<User> = await this.usersRepository.find({
       relations: ['role', 'driver'],
       where: {
@@ -54,7 +54,10 @@ export class UserService {
         id_aut_role
       },
     })
-    return userList;
+    
+    return userList.filter((user)=>{
+      return user.id_aut_user !== id_applicant
+    });
   }
 
   async findOne(id_aut_user: number) {

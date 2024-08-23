@@ -14,9 +14,10 @@ export class CarController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(@Query("car_number") car_number: string, @Query("car_brand") car_brand: string, @Query("number_of_seats") number_of_seats: number,
-  @Query("type_car_situation") type_car_situation: number) {
-    return await this.carService.findAll(car_number, car_brand, number_of_seats, type_car_situation);
+  async findAll(@Query("car_number") car_number: string, @Query("car_brand") car_brand: string, @Query("number_of_seats") number_of_seats: string,
+  @Query("type_car_situation") type_car_situation: string) {
+    return await this.carService.findAll(car_number, car_brand, number_of_seats ? +number_of_seats: undefined,
+      type_car_situation ? +type_car_situation:undefined);
   }
 
   @Get(':id')

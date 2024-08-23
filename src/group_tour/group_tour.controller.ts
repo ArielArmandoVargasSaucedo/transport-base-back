@@ -14,8 +14,8 @@ export class GroupTourController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(@Query("group_code") group_code: number, @Query("country") country: string, @Query("number_of_tourist") number_of_tourist: number) {
-    return this.groupTourService.findAll(group_code, country, number_of_tourist);
+  async findAll(@Query("group_code") group_code: string, @Query("country") country: string, @Query("number_of_tourist") number_of_tourist: string) {
+    return this.groupTourService.findAll(group_code ? +group_code: undefined, country, number_of_tourist ? +number_of_tourist: undefined);
   }
 
   @Get(':id')

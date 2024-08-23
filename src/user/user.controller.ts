@@ -14,8 +14,11 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(@Query("user_name") user_name: string, @Query("dni_user") dni_user: string, @Query("id_aut_role") id_aut_role: number) {
-    return this.userService.findAll(user_name, dni_user, id_aut_role);
+  async findAll(@Query("user_name") user_name: string, @Query("dni_user") dni_user: string, @Query("id_aut_role") id_aut_role: string,
+  @Query("id_applicant") id_applicant: string) {
+    console.log( typeof
+       id_applicant === 'number')
+    return this.userService.findAll(user_name, dni_user, id_aut_role ? +id_aut_role : undefined, id_applicant ? +id_applicant : undefined);
   }
 
   @Get('getUser/:id')

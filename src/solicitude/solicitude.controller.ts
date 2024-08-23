@@ -14,9 +14,9 @@ export class SolicitudeController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(@Query("id_car") id_car: number, @Query("id_aut_prog_type") id_aut_prog_type: number, @Query("id_group") id_group: number,
+  async findAll(@Query("id_car") id_car: string, @Query("id_aut_prog_type") id_aut_prog_type: string, @Query("id_group") id_group: string,
   @Query("dateD") dateD: Date) {
-    return this.solicitudeService.findAll(id_car, id_aut_prog_type, id_group, dateD);
+    return this.solicitudeService.findAll(id_car ? +id_car: undefined, id_aut_prog_type ? +id_aut_prog_type: undefined, id_group ? +id_group: undefined, dateD);
   }
 
   @Get(':id')
