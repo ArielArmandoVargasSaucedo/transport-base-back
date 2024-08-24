@@ -10,6 +10,9 @@ export class TypeDriverSituation {
     @Column({type: 'varchar', unique: true, nullable: false})
     type_ds_name: string;
 
+    @Column({type: 'boolean', nullable: false})
+    is_return: boolean;
+
     @Exclude()
     @OneToMany(() => DriverSituation, (driverSituation) => driverSituation.typeDriverSituation)
     driverSituations: Array<DriverSituation>;
