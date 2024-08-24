@@ -25,10 +25,26 @@ export class CarSituationService {
     return await this.carSituationsRepository.save(carSituation);
   }
 
-  async findAll() {
-    return await this.carSituationsRepository.find({
-      relations: ['typeCarSituation']
-    });
+  async findAll(id_car?: number, id_aut_type_cs?: number, date?: Date) {
+    let carSituationList: Array<CarSituation> = await this.carSituationsRepository.find({
+      relations: ['typeCarSituation'],
+      where:{
+        id_car,
+        id_aut_type_cs
+      }
+    })
+
+    //Filtrado por fecha
+    if (date){
+      let list: Array<CarSituation> = []
+      for (let i = 0; i < carSituationList.length; i++){
+        if (carSituationList[i].current_date_cs >= date && carSituationList[i].return_date_cs <= date)
+          list.push(carSituationList[i])
+      }
+      carSituationList = list
+    }
+    
+    return carSituationList;
   }
 
   async findOne(id_cs: number) {

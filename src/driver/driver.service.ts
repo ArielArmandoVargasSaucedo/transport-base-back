@@ -8,6 +8,8 @@ import { DriverSituationService } from 'src/driver_situation/driver_situation.se
 import { CreateDriverSituationDto } from 'src/driver_situation/dto/create-driver_situation.dto';
 import { DriverSerializable } from './serializable/driver.serializable';
 import { CarService } from 'src/car/car.service';
+import { DriverSituation } from 'src/driver_situation/entities/driver_situation.entity';
+import { UpdateDriverSituationDto } from 'src/driver_situation/dto/update-driver_situation.dto';
 
 @Injectable()
 export class DriverService {
@@ -106,9 +108,16 @@ export class DriverService {
       //Crear la situación del chofer en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
       if(updateDriverDto.driver_situation.id_aut_type_ds !== driver.driverSituations[driver.driverSituations.length-1].id_aut_type_ds || 
         updateDriverDto.driver_situation.return_date_ds !== driver.driverSituations[driver.driverSituations.length-1].return_date_ds){
-        const driverSituation: CreateDriverSituationDto = updateDriverDto.driver_situation
-        driverSituation.id_driver = id_driver
-        await this.driverSituationService.create(driverSituation)
+
+          //En caso de que el tipo de situación tenga fecha de retorno y esta sea mayor que la actual se edita la fecha de retorno
+          if(driver.driverSituations[driver.driverSituations.length-1].return_date_ds && driver.driverSituations[driver.driverSituations.length-1].return_date_ds > new Date()){
+            driver.driverSituations[driver.driverSituations.length-1].return_date_ds = new Date()
+            await this.driverSituationService.update(driver.driverSituations[driver.driverSituations.length-1].id_ds, driver.driverSituations[driver.driverSituations.length-1])
+          }
+
+          const driverSituation: CreateDriverSituationDto = updateDriverDto.driver_situation
+          driverSituation.id_driver = id_driver
+          await this.driverSituationService.create(driverSituation)
       }
       
     } catch(error) {

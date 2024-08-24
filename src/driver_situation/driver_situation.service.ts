@@ -26,10 +26,26 @@ export class DriverSituationService {
     return await this.driverSituationsRepository.save(driverSituation);
   }
 
-  async findAll() {
-    return await this.driverSituationsRepository.find({
-      relations: ['typeDriverSituation']
-    });
+  async findAll(id_driver?: number, id_aut_type_ds?: number, date?: Date) {
+    let driverSituationList: Array<DriverSituation> = await this.driverSituationsRepository.find({
+      relations: ['typeDriverSituation'],
+      where:{
+        id_driver,
+        id_aut_type_ds
+      }
+    })
+
+    //Filtrado por fecha
+    if (date){
+      let list: Array<DriverSituation> = []
+      for (let i = 0; i < driverSituationList.length; i++){
+        if (driverSituationList[i].current_date_ds >= date && driverSituationList[i].return_date_ds <= date)
+          list.push(driverSituationList[i])
+      }
+      driverSituationList = list
+    }
+
+    return driverSituationList;
   }
 
   async findOne(id_ds: number): Promise<DriverSituationSerializable> {
