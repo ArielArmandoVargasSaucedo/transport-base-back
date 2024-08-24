@@ -32,7 +32,10 @@ export class Solicitude {
 
     @Column({type:'date'})
     dateD: Date;
-    
+
+    @Column({type: 'integer', nullable: false})
+    id_route: number;
+
     @ManyToOne(() => Car, (car) => car.solicitudes)
     @JoinColumn({name: 'id_car'})
     car: Car;
@@ -42,6 +45,7 @@ export class Solicitude {
     programmingType: ProgrammingType;
 
     @OneToOne(() => Route, (route) => route.solicitude)
+    @JoinColumn({name: 'id_route'})
     route: Route;
 
     @ManyToOne(() => GroupTour, (groupTour) => groupTour.solicitudes)

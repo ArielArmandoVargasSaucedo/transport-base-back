@@ -21,8 +21,8 @@ export class SolicitudeService {
 
   async findAll(id_car?: number, id_aut_prog_type?: number, id_group?: number, dateD?: Date) {
     const solicitudeList: Array<Solicitude> = await this.solicitudesRepository.find({
-      relations: ['car', 'programmingType', 'groupTour'],
-      where:{
+      relations: ['car', 'programmingType', 'groupTour','route'],
+        where:{
         id_car,
         id_aut_prog_type,
         id_group,
@@ -35,7 +35,7 @@ export class SolicitudeService {
   async findOne(id_solicitude: number) {
     return await this.solicitudesRepository.findOne({
       where: {id_solicitude},
-      relations: ['car', 'programmingType', 'groupTour']
+      relations: ['car', 'programmingType', 'groupTour','route']
     });
   }
 

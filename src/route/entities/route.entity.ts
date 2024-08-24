@@ -18,10 +18,6 @@ export class Route {
     @Column({type: 'time', nullable: false})
     end_time: string;
 
-    @Column({type: 'integer', nullable: false})
-    id_solicitude: number;
-
     @OneToOne(() => Solicitude, (solicitude) => solicitude.route)
-    @JoinColumn({name: 'id_solicitude'})
     solicitude: Solicitude;
 }
