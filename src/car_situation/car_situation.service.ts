@@ -20,34 +20,33 @@ export class CarSituationService {
   async create(createCarSituationDto: CreateCarSituationDto) {
     // se le asigna la fecha actual
     createCarSituationDto.current_date_cs = new Date()
-    
+
     const carSituation = this.carSituationsRepository.create(createCarSituationDto)
     return await this.carSituationsRepository.save(carSituation);
   }
 
-  async findAll(id_car?: number, id_aut_type_cs?: number, date?: Date) {
+  async findAll(id_aut_type_cs?: number, date?: Date) {
     let carSituationList: Array<CarSituation> = await this.carSituationsRepository.find({
       relations: ['typeCarSituation'],
-      where:{
-        id_car,
+      where: {
         id_aut_type_cs
       }
     })
 
     //Filtrado por fecha
-    if (date){
+    if (date) {
       let list: Array<CarSituation> = []
-      for (let i = 0; i < carSituationList.length; i++){
+      for (let i = 0; i < carSituationList.length; i++) {
         if (carSituationList[i].current_date_cs >= date && carSituationList[i].return_date_cs <= date)
           list.push(carSituationList[i])
       }
       carSituationList = list
     }
-    
+
     return carSituationList;
   }
 
-  async findOne(id_cs: number) {
+  async findOneSerializable(id_cs: number) {
     const carSituation: CarSituation | undefined = await this.carSituationsRepository.findOne({
       where: { id_cs },
       relations: ['typeCarSituation']
@@ -58,6 +57,19 @@ export class CarSituationService {
       return new CarSitutationSerializable(carSituation.id_cs, carSituation.return_date_cs,
         carSituation.current_date_cs,
         await this.typeCarSituationService.findOne(carSituation.id_aut_type_cs))
+    else
+      throw new BadRequestException("No se encontró el tipo de situación")
+  }
+
+  async findOne(id_cs: number) {
+    const carSituation: CarSituation | undefined = await this.carSituationsRepository.findOne({
+      where: { id_cs },
+      relations: ['typeCarSituation']
+    });
+
+    // si fue encontrada una carSituation
+    if (carSituation)
+      return carSituation
     else
       throw new BadRequestException("No se encontró el tipo de situación")
   }

@@ -20,25 +20,25 @@ export class DriverSituationService {
   async create(createDriverSituationDto: CreateDriverSituationDto) {
     // se asigna la fecha del sistema
     createDriverSituationDto.current_date_ds = new Date()
-    
+
     const driverSituation = this.driverSituationsRepository.create(createDriverSituationDto)
-    
+
     return await this.driverSituationsRepository.save(driverSituation);
   }
 
   async findAll(id_driver?: number, id_aut_type_ds?: number, date?: Date) {
     let driverSituationList: Array<DriverSituation> = await this.driverSituationsRepository.find({
       relations: ['typeDriverSituation'],
-      where:{
+      where: {
         id_driver,
         id_aut_type_ds
       }
     })
 
     //Filtrado por fecha
-    if (date){
+    if (date) {
       let list: Array<DriverSituation> = []
-      for (let i = 0; i < driverSituationList.length; i++){
+      for (let i = 0; i < driverSituationList.length; i++) {
         if (driverSituationList[i].current_date_ds >= date && driverSituationList[i].return_date_ds <= date)
           list.push(driverSituationList[i])
       }
@@ -48,7 +48,7 @@ export class DriverSituationService {
     return driverSituationList;
   }
 
-  async findOne(id_ds: number): Promise<DriverSituationSerializable> {
+  async findOneSerializable(id_ds: number): Promise<DriverSituationSerializable> {
     const driverSituation: DriverSituation | undefined = await this.driverSituationsRepository.findOne({
       where: { id_ds },
       relations: ['typeDriverSituation']
@@ -57,6 +57,18 @@ export class DriverSituationService {
     if (driverSituation)
       return new DriverSituationSerializable(driverSituation.id_ds, driverSituation.id_driver,
         driverSituation.return_date_ds, driverSituation.current_date_ds, await this.typeDriverSituationService.findOne(driverSituation.id_aut_type_ds))
+    else
+      throw new BadRequestException("No se encontró la situación")
+  }
+
+  async findOne(id_ds: number): Promise<DriverSituation> {
+    const driverSituation: DriverSituation | undefined = await this.driverSituationsRepository.findOne({
+      where: { id_ds },
+      relations: ['typeDriverSituation']
+    });
+    // si fue encontrada la situación del chofer
+    if (driverSituation)
+      return driverSituation
     else
       throw new BadRequestException("No se encontró la situación")
   }
