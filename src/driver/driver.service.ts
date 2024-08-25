@@ -93,7 +93,7 @@ export class DriverService {
 
     // si fue encontrado el driver
     if (driver) {
-      return new DriverSerializable(driver.id_car, driver.dni_driver, driver.driver_name, driver.home_address, driver.is_copilot, 
+      return new DriverSerializable(driver.id_car, driver.dni_driver, driver.driver_name, driver.home_address, driver.is_copilot,
         await this.driverSituationService.findOneSerializable(driver.currentDriverSituation.id_ds), await this.carSerive.findOneSerializable(driver.id_car))
     }
     else
@@ -123,9 +123,14 @@ export class DriverService {
         updateDriverDto.currentDriverSituation.return_date_ds !== driver.currentDriverSituation.return_date_ds) {
 
         //En caso de que el tipo de situación tenga fecha de retorno y esta sea mayor que la actual se edita la fecha de retorno
-        if (driver.currentDriverSituation.return_date_ds && driver.currentDriverSituation.return_date_ds > new Date()) {
-          // se actualiza la current date anterior antes de añadirla la historial
-          driver.currentDriverSituation.return_date_ds = new Date() // se indica que realmente finalizó hoy
+        if (driver.currentDriverSituation.return_date_ds) {
+          // Para realizar la comparación entre las fechas, primero se convierten estas realemente a tipo "Date" de typescript
+          const returnDateCurrentSituationAnterior = new Date(driver.currentDriverSituation.return_date_ds)
+          if (returnDateCurrentSituationAnterior > new Date()) {
+            console.log("Si me imprimo es que la comparación funciona")
+            // se actualiza la current date anterior antes de añadirla la historial
+            driver.currentDriverSituation.return_date_ds = new Date() // se indica que realmente finalizó hoy
+          }
         }
 
         // se añade al hisotrial la situación actual anterior del driver

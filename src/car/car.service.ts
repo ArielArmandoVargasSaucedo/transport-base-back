@@ -128,10 +128,16 @@ export class CarService {
       if (updateCarDto.currentCarSituation.id_aut_type_cs !== car.currentCarSituation.id_aut_type_cs ||
         updateCarDto.currentCarSituation.return_date_cs !== car.currentCarSituation.return_date_cs) {
 
+
         //En caso de que el tipo de situación tenga fecha de retorno y esta sea mayor que la actual se edita la fecha de retorno
-        if (car.currentCarSituation.return_date_cs && car.currentCarSituation.return_date_cs > new Date()) {
-          // se actualiza la current date anterior antes de añadirla la historial
-          car.currentCarSituation.return_date_cs = new Date() // se indica que realmente finalizó hoy
+        if (car.currentCarSituation.return_date_cs) {
+          // Para realizar la comparación entre las fechas, primero se convierten estas realemente a tipo "Date" de typescript
+          const returnDateCurrentSituationAnterior = new Date(car.currentCarSituation.return_date_cs)
+          if (returnDateCurrentSituationAnterior > new Date()) {
+            console.log("Si me imprimo es que la comparación funciona")
+            // se actualiza la current date anterior antes de añadirla la historial
+            car.currentCarSituation.return_date_cs = new Date() // se indica que realmente finalizó hoy
+          }
         }
 
         // luego la anterior current car situation se añade al historial de situaciones del carro
