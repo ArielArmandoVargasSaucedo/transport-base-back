@@ -4,6 +4,9 @@ import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { jwtConstants } from './constants';
+import { MailerModule } from 'src/mailer/mailer.module';
+import { ConfigModule } from '@nestjs/config';
+import { CodigoVerificacionModule } from 'src/codigo_verificacion/codigo_verificacion.module';
 
 @Module({
   imports: [
@@ -13,9 +16,12 @@ import { jwtConstants } from './constants';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
     }),
+    MailerModule,
+    ConfigModule.forRoot(),
+    CodigoVerificacionModule
   ],
   providers: [AuthService],
   controllers: [AuthController],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

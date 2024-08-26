@@ -54,7 +54,7 @@ export class UserService {
         id_aut_role
       },
     })
-    return userList.filter((user)=>{
+    return userList.filter((user) => {
       return user.id_aut_user !== id_applicant
     });
   }
@@ -66,6 +66,21 @@ export class UserService {
     });
   }
 
+  // Método para buscar a un usuario por su email
+  async findOneByEmail(email: string) {
+    const user = await this.usersRepository.findOne({ // se busca al usuario por el email
+      where: {
+        email: email
+      }
+    })
+
+    // si no fue encontrado un usuario con dicho email
+    if (!user)
+      throw new HttpException("El email proporcionado no existe", HttpStatus.BAD_REQUEST)
+
+    return user
+  }
+
   //Función para obtener un usuario por el nombre de usuario
   async findOneAuth(user_name?: string, password_user?: string) {
     if (!user_name && !password_user)
@@ -74,6 +89,7 @@ export class UserService {
       relations: ['role', 'driver'],
       where: { user_name }
     })
+   
     if (!user)
       throw new HttpException('Nombre de usuario o contraseña incorrecta', HttpStatus.BAD_REQUEST)
     // si se encontró un usuario con ese nombre
@@ -85,24 +101,16 @@ export class UserService {
 
   async update(id_aut_user: number, updateUserDto: UpdateUserDto) {
     try {
-      if (updateUserDto.dni_user.length !== 11)
-        throw new HttpException('El dni del usuario debe tener 11 caracteres', HttpStatus.BAD_REQUEST)
-      else if (!/^\d+$/.test(updateUserDto.dni_user) || !/^[^*_\[\]'"]+$/.test(updateUserDto.dni_user))
-        throw new HttpException('El dni del usuario debe contener solo números', HttpStatus.BAD_REQUEST)
-      else if (updateUserDto.user_name.length < 4)
+
+      if (updateUserDto.user_name.length < 4)
         throw new HttpException('El nombre del usuario debe tener al menos 4 caracteres', HttpStatus.BAD_REQUEST)
-      else if (updateUserDto.password_user.length < 8)
-        throw new HttpException('La contraseña del usuario debe tener al menos 8 caracteres', HttpStatus.BAD_REQUEST)
+
 
       const user = await this.findOne(id_aut_user)
       if (!user)
         throw new NotFoundException
-      Object.assign(user, updateUserDto)
 
-      //Encriptar contraseña
-      const saltOrRounds = 10
-      const hash = await bcrypt.hash(user.password_user, saltOrRounds)
-      user.password_user = hash
+      user.user_name = updateUserDto.user_name
 
       return await this.usersRepository.save(user);
     } catch (error) {
@@ -114,6 +122,36 @@ export class UserService {
       }
       throw error;
     }
+  }
+
+  async changePasswordUser(id_user: number, new_password: string) {
+    // se busca al usuario que se le desea modificar la contraseña
+    const user = await this.findOne(id_user)
+
+    // si existe un usuario con ese id
+    if (user) {
+      // se actualiza la contraseña
+      user.password_user = await bcrypt.hash(new_password, 10)
+      // luego se actualizan los cambios en la base de datos
+      await this.usersRepository.save(user)
+    }
+    else
+      throw new HttpException("No existe un usuario con ese id", HttpStatus.BAD_REQUEST)
+  }
+
+  async verificarContraseñaUsuario(password: string, idUsuario: number): Promise<boolean> {
+    let isPasswordPerteneceUsuario = false
+    const usuario = await this.findOne(idUsuario)
+
+    // si fue entontrado a un usuario con ese id
+    if (usuario) {
+      if (await bcrypt.compare(password, usuario.password_user)) // si las contraseñas son iguales
+        isPasswordPerteneceUsuario = true
+    }
+    else
+      throw new HttpException("No existe un usuario con ese id", HttpStatus.BAD_REQUEST)
+
+    return isPasswordPerteneceUsuario
   }
 
   async remove(id_aut_user: number) {
