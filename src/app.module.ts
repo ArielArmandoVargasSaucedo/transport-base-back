@@ -15,6 +15,8 @@ import { ProgrammingTypeModule } from './programming_type/programming_type.modul
 import { GroupTourModule } from './group_tour/group_tour.module';
 import { RouteModule } from './route/route.module';
 import { AuthModule } from './auth/auth.module';
+import { MailerModule } from './mailer/mailer.module';
+import { CodigoVerificacionModule } from './codigo_verificacion/codigo_verificacion.module';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { AuthModule } from './auth/auth.module';
     GroupTourModule,
     RouteModule,
     AuthModule,
+    MailerModule,
+    CodigoVerificacionModule
   ],
 })
 export class AppModule {}

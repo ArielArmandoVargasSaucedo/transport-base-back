@@ -4,5 +4,5 @@ export class CreateCarDto {
     car_number: string;
     car_brand: string;
     number_of_seats: number;
-    car_situation: CreateCarSituationDto;
+    currentCarSituation: CreateCarSituationDto;
 }

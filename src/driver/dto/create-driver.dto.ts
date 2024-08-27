@@ -5,6 +5,6 @@ export class CreateDriverDto {
     driver_name: string;
     home_address: string;
     is_copilot: boolean;
-    driver_situation: CreateDriverSituationDto;
+    currentDriverSituation: CreateDriverSituationDto;
     id_car: number;
 }

@@ -5,7 +5,7 @@ import { UpdateCarSituationDto } from './dto/update-car_situation.dto';
 
 @Controller('car-situation')
 export class CarSituationController {
-  constructor(private readonly carSituationService: CarSituationService) {}
+  constructor(private readonly carSituationService: CarSituationService) { }
 
   @Post()
   create(@Body() createCarSituationDto: CreateCarSituationDto) {
@@ -13,9 +13,9 @@ export class CarSituationController {
   }
 
   @Get()
-  findAll(@Query("id_car") id_car: string, @Query("id_aut_type_cs") id_aut_type_cs: string, @Query("date") insertDate: string) {
+  findAll(@Query("id_aut_type_cs") id_aut_type_cs: string, @Query("date") insertDate: string) {
     const date = new Date(insertDate);
-    return this.carSituationService.findAll(id_car ? +id_car: undefined, id_aut_type_cs ? +id_aut_type_cs: undefined, date);
+    return this.carSituationService.findAll(id_aut_type_cs ? +id_aut_type_cs : undefined, date);
   }
 
   @Get(':id')
