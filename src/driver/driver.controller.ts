@@ -21,8 +21,8 @@ export class DriverController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.driverService.findOneSerializable(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.driverService.findOneSerializable(+id);
   }
 
   @Get('getHistorialDriverSituations/:id')
