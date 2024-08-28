@@ -26,8 +26,9 @@ export class DriverController {
   }
 
   @Get('getHistorialDriverSituations/:id')
-  async getHistorialDriverSituations(@Param('id', ParseIntPipe) id: number, @Query('nombreTipoSituacion') nombreTipoSituacion: string) {
-    return await this.driverService.getHistorialDriverSituations(id, nombreTipoSituacion)
+  async getHistorialDriverSituations(@Param('id', ParseIntPipe) id: number, @Query('nombreTipoSituacion') nombreTipoSituacion: string, @Query('insertDate') insertDate: string) {
+    const date = insertDate ? new Date(insertDate) : null
+    return await this.driverService.getHistorialDriverSituations(id, nombreTipoSituacion, date)
   }
 
   @Patch(':id')

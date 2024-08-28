@@ -167,8 +167,8 @@ export class CarService {
   }
 
   // Método para obtener el historial de situaciones de un carro en específico
-  public async getHistorialCarSituations(id_car: number, /* filtros */ nombreTipoSituacion?: string): Promise<Array<CarSitutationSerializable>> {
-    const listHistorialCarSituationsRetorno: Array<CarSitutationSerializable> = new Array<CarSitutationSerializable>()
+  public async getHistorialCarSituations(id_car: number, /* filtros */ nombreTipoSituacion?: string, date?: Date): Promise<Array<CarSitutationSerializable>> {
+    let listHistorialCarSituationsRetorno: Array<CarSitutationSerializable> = new Array<CarSitutationSerializable>()
     const car = await this.findOne(id_car) // se busca al carro con ese id
     // si fue encontrado un carro con ese id
     if (car) {
@@ -180,6 +180,19 @@ export class CarService {
         if ((!nombreTipoSituacion || carSituation.type_car_situation.type_cs_name.includes(nombreTipoSituacion)))
           listHistorialCarSituationsRetorno.push(carSituation)
       })
+
+      //filtrado por fecha
+      if(date){
+        let list: Array<CarSitutationSerializable> = new Array<CarSitutationSerializable>()
+        listHistorialCarSituationsRetorno.forEach((carSituation) => {
+          console.log(date)
+          let currentDate: Date = new Date(carSituation.current_date_cs)
+          let returnDate: Date = new Date(carSituation.return_date_cs)
+          if(date >= currentDate && date <= returnDate)
+            list.push(carSituation)
+        })
+        listHistorialCarSituationsRetorno = list
+      }
     }
     else
       throw new HttpException('No fue encontrado carro con ese id.', HttpStatus.BAD_REQUEST);

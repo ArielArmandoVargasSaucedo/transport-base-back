@@ -161,12 +161,12 @@ export class DriverService {
   }
 
   // Método para obtener el historial de situaciones de un chofer en específico
-  public async getHistorialDriverSituations(id_driver: number, /* filtros */ nombreTipoSituacion?: string): Promise<Array<DriverSituationSerializable>> {
-    const listHistorialDriverSituations: Array<DriverSituationSerializable> = new Array<DriverSituationSerializable>()
-    const driver = await this.findOne(id_driver) // se busca al carro con ese id
-    // si fue encontrado un driver con ese id
+  public async getHistorialDriverSituations(id_driver: number, /* filtros */ nombreTipoSituacion?: string, date?: Date): Promise<Array<DriverSituationSerializable>> {
+    let listHistorialDriverSituations: Array<DriverSituationSerializable> = new Array<DriverSituationSerializable>()
+    const driver = await this.findOne(id_driver) // se busca al chofer con ese id
+    // si fue encontrado un chofer con ese id
     if (driver) {
-      // se obtiene el historial completo de situaciones de los carros
+      // se obtiene el historial completo de situaciones de los choferes
       const historialDriverSituations = driver.historyDriverSituations
       // se recorre esa lista para filtrar
       historialDriverSituations.forEach((driverSituation) => {
@@ -174,6 +174,19 @@ export class DriverService {
         if ((!nombreTipoSituacion || driverSituation.type_driver_situation.type_ds_name.includes(nombreTipoSituacion)))
           listHistorialDriverSituations.push(driverSituation)
       })
+
+      //filtrado por fecha
+      if(date){
+        let list: Array<DriverSituationSerializable> = new Array<DriverSituationSerializable>()
+        listHistorialDriverSituations.forEach((driverSituation) => {
+          console.log(date)
+          let currentDate: Date = new Date(driverSituation.current_date_ds)
+          let returnDate: Date = new Date(driverSituation.return_date_ds)
+          if(date >= currentDate && date <= returnDate)
+            list.push(driverSituation)
+        })
+        listHistorialDriverSituations = list
+      }
     }
     else
       throw new HttpException('No fue encontrado chófer con ese id.', HttpStatus.BAD_REQUEST);
