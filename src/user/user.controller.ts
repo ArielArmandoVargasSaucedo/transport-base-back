@@ -8,16 +8,16 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(@Query("user_name") user_name: string, @Query("dni_user") dni_user: string, @Query("id_aut_role") id_aut_role: string,
+  async findAll(@Query("user_name") user_name: string,  @Query("id_aut_role") id_aut_role: string,
   @Query("id_applicant") id_applicant: string) {
     console.log(id_aut_role)
-    return await this.userService.findAll(user_name, dni_user, id_aut_role ? +id_aut_role : undefined, id_applicant ? +id_applicant : undefined);
+    return await this.userService.findAll(user_name, id_aut_role ? +id_aut_role : undefined, id_applicant ? +id_applicant : undefined);
   }
 
   @Get('getUser/:id')

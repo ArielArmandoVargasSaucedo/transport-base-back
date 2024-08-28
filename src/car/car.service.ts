@@ -126,7 +126,7 @@ export class CarService {
 
       //Crear la situación del carro en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
       if (updateCarDto.currentCarSituation.id_aut_type_cs !== car.currentCarSituation.id_aut_type_cs ||
-        updateCarDto.currentCarSituation.return_date_cs !== car.currentCarSituation.return_date_cs) {
+        new Date(updateCarDto.currentCarSituation.return_date_cs).getTime() !== new Date(car.currentCarSituation.return_date_cs).getTime()) {
 
 
         //En caso de que el tipo de situación tenga fecha de retorno y esta sea mayor que la actual se edita la fecha de retorno

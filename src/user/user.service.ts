@@ -16,12 +16,8 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    try {
-      if (createUserDto.dni_user.length !== 11)
-        throw new HttpException('El dni del usuario debe tener 11 caracteres', HttpStatus.BAD_REQUEST)
-      else if (!/^\d+$/.test(createUserDto.dni_user) || !/^[^*_\[\]'"]+$/.test(createUserDto.dni_user))
-        throw new HttpException('El dni del usuario debe contener solo números', HttpStatus.BAD_REQUEST)
-      else if (createUserDto.user_name.length < 4)
+    try {  
+      if (createUserDto.user_name.length < 4)
         throw new HttpException('El nombre del usuario debe tener al menos 4 caracteres', HttpStatus.BAD_REQUEST)
       else if (createUserDto.password_user.length < 8)
         throw new HttpException('La contraseña del usuario debe tener al menos 8 caracteres', HttpStatus.BAD_REQUEST)
@@ -45,12 +41,11 @@ export class UserService {
     }
   }
 
-  async findAll(user_name?: string, dni_user?: string, id_aut_role?: number, id_applicant?: number) {
+  async findAll(user_name?: string, id_aut_role?: number, id_applicant?: number) {
     const userList: Array<User> = await this.usersRepository.find({
       relations: ['role', 'driver'],
       where: {
         user_name: user_name ? Like(`%${user_name}%`) : user_name,
-        dni_user: dni_user ? Like(`%${dni_user}%`) : dni_user,
         id_aut_role
       },
     })

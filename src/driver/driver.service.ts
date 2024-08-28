@@ -120,7 +120,7 @@ export class DriverService {
 
       //Crear la situación del chofer en caso de que se haya asignado un nuevo tipo de situación o se haya cambiado la fecha de retorno
       if (updateDriverDto.currentDriverSituation.id_aut_type_ds !== driver.currentDriverSituation.id_aut_type_ds ||
-        updateDriverDto.currentDriverSituation.return_date_ds !== driver.currentDriverSituation.return_date_ds) {
+        new Date(updateDriverDto.currentDriverSituation.return_date_ds).getTime() !== new Date(driver.currentDriverSituation.return_date_ds).getTime()) {
 
         //En caso de que el tipo de situación tenga fecha de retorno y esta sea mayor que la actual se edita la fecha de retorno
         if (driver.currentDriverSituation.return_date_ds) {
