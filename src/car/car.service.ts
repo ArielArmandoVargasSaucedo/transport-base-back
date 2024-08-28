@@ -137,8 +137,11 @@ export class CarService {
             console.log("Si me imprimo es que la comparación funciona")
             // se actualiza la current date anterior antes de añadirla la historial
             car.currentCarSituation.return_date_cs = new Date() // se indica que realmente finalizó hoy
+            await this.carSituationService.update(car.currentCarSituation.id_cs, car.currentCarSituation)
           }
         }
+        else if (!car.currentCarSituation.return_date_cs)
+          car.currentCarSituation.return_date_cs = new Date()
 
         // luego la anterior current car situation se añade al historial de situaciones del carro
         // para ello se busca esa situación en el servicio de situaciones de carros
@@ -185,7 +188,6 @@ export class CarService {
       if(date){
         let list: Array<CarSitutationSerializable> = new Array<CarSitutationSerializable>()
         listHistorialCarSituationsRetorno.forEach((carSituation) => {
-          console.log(date)
           let currentDate: Date = new Date(carSituation.current_date_cs)
           let returnDate: Date = new Date(carSituation.return_date_cs)
           if(date >= currentDate && date <= returnDate)

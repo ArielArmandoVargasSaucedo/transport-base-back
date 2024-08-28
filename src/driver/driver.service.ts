@@ -130,8 +130,11 @@ export class DriverService {
             console.log("Si me imprimo es que la comparación funciona")
             // se actualiza la current date anterior antes de añadirla la historial
             driver.currentDriverSituation.return_date_ds = new Date() // se indica que realmente finalizó hoy
+            await this.driverSituationService.update(driver.currentDriverSituation.id_ds, driver.currentDriverSituation)
           }
         }
+        else if (!driver.currentDriverSituation.return_date_ds)
+          driver.currentDriverSituation.return_date_ds = new Date()
 
         // se añade al hisotrial la situación actual anterior del driver
         // para ello se busca en el servicio de situaciones a dicha situación
@@ -179,7 +182,6 @@ export class DriverService {
       if(date){
         let list: Array<DriverSituationSerializable> = new Array<DriverSituationSerializable>()
         listHistorialDriverSituations.forEach((driverSituation) => {
-          console.log(date)
           let currentDate: Date = new Date(driverSituation.current_date_ds)
           let returnDate: Date = new Date(driverSituation.return_date_ds)
           if(date >= currentDate && date <= returnDate)
