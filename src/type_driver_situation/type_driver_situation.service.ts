@@ -65,9 +65,15 @@ export class TypeDriverSituationService {
   }
 
   async remove(id_aut_type_ds: number) {
-    const typesDriverSituation = await this.findOne(id_aut_type_ds)
-    if (!typesDriverSituation)
-      throw new NotFoundException
-    return await this.typesDriverSituationRepository.delete(id_aut_type_ds);
+    try {
+      const typesDriverSituation = await this.findOne(id_aut_type_ds)
+      if (!typesDriverSituation)
+        throw new NotFoundException
+      return await this.typesDriverSituationRepository.delete(id_aut_type_ds);
+    } catch(error) {
+      if(error.code = '23503')
+        throw new HttpException("Este nomensclador no puede ser eliminado porque tiene elementos asociados a él", HttpStatus.BAD_REQUEST)
+      throw error;
+    }
   }
 }
