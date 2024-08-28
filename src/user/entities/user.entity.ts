@@ -15,9 +15,6 @@ export class User {
     @Column({ type: 'varchar', nullable: false })
     password_user: string;
 
-    @Column({ type: 'varchar', unique: true, nullable: false })
-    dni_user: string;
-
     @Column({ type: 'integer', nullable: false })
     id_aut_role: number;
 
