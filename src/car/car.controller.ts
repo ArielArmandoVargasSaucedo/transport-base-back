@@ -27,8 +27,10 @@ export class CarController {
   }
 
   @Get('getHistorialCarSituations/:id')
-  async getHistorialCarSituations(@Param('id', ParseIntPipe) id: number, @Query('nombreTipoSituacion') nombreTipoSituacion: string) {
-    return await this.carService.getHistorialCarSituations(id, nombreTipoSituacion)
+  async getHistorialCarSituations(@Param('id', ParseIntPipe) id: number, @Query('nombreTipoSituacion') nombreTipoSituacion: string,
+  @Query('insertDate') insertDate: string) {
+    const date = insertDate ? new Date(insertDate) : null
+    return await this.carService.getHistorialCarSituations(id, nombreTipoSituacion, date)
   }
 
   @Patch(':id')

@@ -137,8 +137,11 @@ export class CarService {
             console.log("Si me imprimo es que la comparación funciona")
             // se actualiza la current date anterior antes de añadirla la historial
             car.currentCarSituation.return_date_cs = new Date() // se indica que realmente finalizó hoy
+            await this.carSituationService.update(car.currentCarSituation.id_cs, car.currentCarSituation)
           }
         }
+        else if (!car.currentCarSituation.return_date_cs)
+          car.currentCarSituation.return_date_cs = new Date()
 
         // luego la anterior current car situation se añade al historial de situaciones del carro
         // para ello se busca esa situación en el servicio de situaciones de carros
@@ -167,8 +170,8 @@ export class CarService {
   }
 
   // Método para obtener el historial de situaciones de un carro en específico
-  public async getHistorialCarSituations(id_car: number, /* filtros */ nombreTipoSituacion?: string): Promise<Array<CarSitutationSerializable>> {
-    const listHistorialCarSituationsRetorno: Array<CarSitutationSerializable> = new Array<CarSitutationSerializable>()
+  public async getHistorialCarSituations(id_car: number, /* filtros */ nombreTipoSituacion?: string, date?: Date): Promise<Array<CarSitutationSerializable>> {
+    let listHistorialCarSituationsRetorno: Array<CarSitutationSerializable> = new Array<CarSitutationSerializable>()
     const car = await this.findOne(id_car) // se busca al carro con ese id
     // si fue encontrado un carro con ese id
     if (car) {
@@ -180,6 +183,18 @@ export class CarService {
         if ((!nombreTipoSituacion || carSituation.type_car_situation.type_cs_name.includes(nombreTipoSituacion)))
           listHistorialCarSituationsRetorno.push(carSituation)
       })
+
+      //filtrado por fecha
+      if(date){
+        let list: Array<CarSitutationSerializable> = new Array<CarSitutationSerializable>()
+        listHistorialCarSituationsRetorno.forEach((carSituation) => {
+          let currentDate: Date = new Date(carSituation.current_date_cs)
+          let returnDate: Date = new Date(carSituation.return_date_cs)
+          if(date >= currentDate && date <= returnDate)
+            list.push(carSituation)
+        })
+        listHistorialCarSituationsRetorno = list
+      }
     }
     else
       throw new HttpException('No fue encontrado carro con ese id.', HttpStatus.BAD_REQUEST);
@@ -189,9 +204,16 @@ export class CarService {
 
 
   async remove(id_car: number) {
-    const car = await this.findOne(id_car)
-    if (!car)
-      throw new NotFoundException
-    return await this.carsRepository.delete(id_car);
+    try {
+      const car = await this.findOne(id_car)
+      if (!car)
+        throw new NotFoundException
+      return await this.carsRepository.delete(id_car);
+    } catch(error) {
+      if(error.code == '23503'){
+        throw new HttpException('No se puede eliminar el carro porque se encuentra asignado a un chofer', HttpStatus.BAD_REQUEST)
+      }
+      throw error;
+    }
   }
 }
