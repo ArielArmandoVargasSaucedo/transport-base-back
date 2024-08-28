@@ -71,8 +71,8 @@ export class TypeDriverSituationService {
         throw new NotFoundException
       return await this.typesDriverSituationRepository.delete(id_aut_type_ds);
     } catch(error) {
-      if(error.code = '23503')
-        throw new HttpException("Este nomensclador no puede ser eliminado porque tiene elementos asociados a él", HttpStatus.BAD_REQUEST)
+      if(error.code == '23503')
+        throw new HttpException('Este nomenclador no puede ser eliminado porque tiene elementos asociados a él', HttpStatus.BAD_REQUEST)
       throw error;
     }
   }

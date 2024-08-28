@@ -56,9 +56,15 @@ export class ProgrammingTypeService {
   }
 
   async remove(id_aut_prog_type: number) {
-    const programmingType = await this.findOne(id_aut_prog_type)
-    if(!programmingType)
-      throw new NotFoundException
-    return await this.programmingTypesRepository.delete(id_aut_prog_type);
+    try {
+      const programmingType = await this.findOne(id_aut_prog_type)
+      if(!programmingType)
+        throw new NotFoundException
+      return await this.programmingTypesRepository.delete(id_aut_prog_type);
+    } catch(error) {
+      if(error.code == '23503')
+        throw new HttpException('Este nomenclador no puede ser eliminado porque tiene elementos asociados a él', HttpStatus.BAD_REQUEST)
+      throw error;
+    }
   }
 }

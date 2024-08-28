@@ -64,9 +64,15 @@ export class TypeCarSituationService {
   }
 
   async remove(id_aut_type_cs: number) {
-    const typeCarSituation = await this.findOne(id_aut_type_cs)
-    if (!typeCarSituation)
-      throw new NotFoundException
-    return await this.typesCarSituationRepository.delete(id_aut_type_cs);
+    try {
+      const typeCarSituation = await this.findOne(id_aut_type_cs)
+      if (!typeCarSituation)
+        throw new NotFoundException
+      return await this.typesCarSituationRepository.delete(id_aut_type_cs);
+    } catch(error) {
+      if(error.code == '23503')
+        throw new HttpException('Este nomenclador no puede ser eliminado porque tiene elementos asociados a él', HttpStatus.BAD_REQUEST)
+      throw error;
+    }
   }
 }
