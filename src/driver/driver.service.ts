@@ -78,6 +78,27 @@ export class DriverService {
     return listDriverSerializable;
   }
 
+  // Método para obtener todos los drivers que aún no posean cuenta
+  async getAllDriversWithOutAccount (): Promise<Array<DriverSerializable>> {
+const driversSerializables: Array<DriverSerializable> = new Array<DriverSerializable>()
+
+// se obtienen todos los drivers de la base de datos
+const driversEntitys: Array<Driver> = await this.driversRepository.find({
+  relations: ['user']
+})
+
+
+// se filtra la lista, para obtener a los drivers que no posean cuenta
+driversEntitys.forEach((driver) => { 
+  // si la propiedad user no está definida (no tiene cuenta)
+
+  if (!driver.user)
+    driversSerializables.push(new DriverSerializable(driver.id_driver, driver.dni_driver, 
+  driver.driver_name, driver.home_address, driver.is_copilot)) // se inserta el driver en la lista de retorno
+} )
+return driversSerializables
+  }
+
   async findOne(id_driver: number) {
     return await this.driversRepository.findOne({
       where: { id_driver },
@@ -93,7 +114,7 @@ export class DriverService {
 
     // si fue encontrado el driver
     if (driver) {
-      return new DriverSerializable(driver.id_car, driver.dni_driver, driver.driver_name, driver.home_address, driver.is_copilot,
+      return new DriverSerializable(driver.id_driver, driver.dni_driver, driver.driver_name, driver.home_address, driver.is_copilot,
         await this.driverSituationService.findOneSerializable(driver.currentDriverSituation.id_ds), await this.carSerive.findOneSerializable(driver.id_car))
     }
     else

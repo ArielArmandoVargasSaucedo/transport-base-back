@@ -7,16 +7,16 @@ export class DriverSerializable {
     driver_name: string;
     home_address: string;
     is_copilot: boolean;
-    currentDriverSituation: DriverSituationSerializable
-    car: CarSerializable
+    currentDriverSituation?: DriverSituationSerializable
+    car?: CarSerializable
 
     constructor(id: number,
         dni_driver: string,
         driver_name: string,
         home_address: string,
         is_copilot: boolean,
-        currentDriverSituation: DriverSituationSerializable,
-        car: CarSerializable) {
+        currentDriverSituation?: DriverSituationSerializable,
+        car?: CarSerializable) {
         this.id = id
         this.dni_driver = dni_driver
         this.driver_name = driver_name

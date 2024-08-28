@@ -21,10 +21,10 @@ export class AuthService {
     let res: {
       access_token: string, payload: {
         userId: number,
-        role: string
+        role: number,
       }
     } | undefined = undefined
-    const payload = { userId: user.id_aut_user, role: user.role.role_type }
+    const payload = { userId: user.id_aut_user, role: user.role.id_aut_role }
     const access_token = await this.jwtService.signAsync(payload)
     res = { access_token: access_token, payload }
     return res;

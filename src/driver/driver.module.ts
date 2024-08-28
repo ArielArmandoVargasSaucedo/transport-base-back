@@ -11,5 +11,6 @@ import { CarModule } from 'src/car/car.module';
   imports: [TypeOrmModule.forFeature([Driver]), DriverSituationModule, CarModule],
   controllers: [DriverController],
   providers: [DriverService],
+  exports: [DriverService]
 })
 export class DriverModule {}

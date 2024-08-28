@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { UserSerializable } from './serializable/user.serializable';
+import { DriverService } from 'src/driver/driver.service';
 
 @Injectable()
 export class UserService {
@@ -12,11 +14,12 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository:
-      Repository<User>) {
+      Repository<User>,
+    private driverService: DriverService) {
   }
 
   async create(createUserDto: CreateUserDto) {
-    try {  
+    try {
       if (createUserDto.user_name.length < 4)
         throw new HttpException('El nombre del usuario debe tener al menos 4 caracteres', HttpStatus.BAD_REQUEST)
       else if (createUserDto.password_user.length < 8)
@@ -42,6 +45,7 @@ export class UserService {
   }
 
   async findAll(user_name?: string, id_aut_role?: number, id_applicant?: number) {
+    const userSerializables: Array<UserSerializable> = new Array<UserSerializable>()
     const userList: Array<User> = await this.usersRepository.find({
       relations: ['role', 'driver'],
       where: {
@@ -49,9 +53,16 @@ export class UserService {
         id_aut_role
       },
     })
-    return userList.filter((user) => {
-      return user.id_aut_user !== id_applicant
-    });
+
+    // se recorre la lista para crear user serializables
+    for (let index = 0; index < userList.length; index++) {
+      const user = userList[index];
+      if (user.id_aut_user !== id_applicant) // si el id del usuario es distinto del id del que solicita a los usuarios
+      userSerializables.push(new UserSerializable(user.id_aut_user, user.user_name,
+        user.email, user.role,
+        user.driver ? await this.driverService.findOneSerializable(user.driver.id_driver) : undefined))
+    }
+    return userSerializables
   }
 
   async findOne(id_aut_user: number) {
@@ -84,7 +95,7 @@ export class UserService {
       relations: ['role', 'driver'],
       where: { user_name }
     })
-   
+
     if (!user)
       throw new HttpException('Nombre de usuario o contraseña incorrecta', HttpStatus.BAD_REQUEST)
     // si se encontró un usuario con ese nombre
@@ -106,6 +117,13 @@ export class UserService {
         throw new NotFoundException
 
       user.user_name = updateUserDto.user_name
+      // si se mandó una nueva contraseña
+      if (updateUserDto.password_user) {
+        const saltOrRounds = 10
+        const hash = await bcrypt.hash(updateUserDto.password_user, saltOrRounds)
+        user.password_user = hash
+      }
+      user.email = updateUserDto.email
 
       return await this.usersRepository.save(user);
     } catch (error) {

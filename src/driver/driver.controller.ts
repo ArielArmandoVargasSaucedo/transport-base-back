@@ -20,14 +20,18 @@ export class DriverController {
       type_driver_situation ? +type_driver_situation : undefined, id_car ? +id_car : undefined);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.driverService.findOneSerializable(+id);
-  }
-
   @Get('getHistorialDriverSituations/:id')
   async getHistorialDriverSituations(@Param('id', ParseIntPipe) id: number, @Query('nombreTipoSituacion') nombreTipoSituacion: string) {
     return await this.driverService.getHistorialDriverSituations(id, nombreTipoSituacion)
+  }
+  @Get('getAllDriversWithOutAccount')
+  async getAllDriversWithOutAccount () {
+    return await this.driverService.getAllDriversWithOutAccount()
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return await this.driverService.findOneSerializable(+id);
   }
 
   @Patch(':id')
