@@ -204,9 +204,16 @@ export class CarService {
 
 
   async remove(id_car: number) {
-    const car = await this.findOne(id_car)
-    if (!car)
-      throw new NotFoundException
-    return await this.carsRepository.delete(id_car);
+    try {
+      const car = await this.findOne(id_car)
+      if (!car)
+        throw new NotFoundException
+      return await this.carsRepository.delete(id_car);
+    } catch(error) {
+      if(error.code == '23503'){
+        throw new HttpException('No se puede eliminar el carro porque se encuentra asignado a un chofer', HttpStatus.BAD_REQUEST)
+      }
+      throw error;
+    }
   }
 }
