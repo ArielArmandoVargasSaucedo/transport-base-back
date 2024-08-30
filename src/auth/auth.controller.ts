@@ -1,6 +1,7 @@
-import { Body, Controller, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './login.dto';
+import { AuthGuard } from './guard/auth.guard';
 
 
 @Controller('auth')
@@ -35,5 +36,11 @@ export class AuthController {
   @Post('getUserByEmail')
   async getUserById(@Body() payload: { email: string } /* se envia como body de la petición ya que es más seguro */) {
     return await this.authService.getUserByEmail(payload.email)
+  }
+
+  @Get('profile')
+  @UseGuards(AuthGuard)
+  profile(@Request() req) {
+    return req.user;
   }
 }
