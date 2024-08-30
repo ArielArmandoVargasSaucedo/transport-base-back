@@ -10,14 +10,8 @@ export class Solicitude {
     @PrimaryGeneratedColumn()
     id_solicitude: number;
 
-    @Column({type: 'time', nullable: false})
-    programming_start_time: string;
-
     @Column({type: 'varchar', nullable: false})
     programming_to_be_done: string;
-
-    @Column({type: 'time', nullable: false})
-    duration_time: string;
 
     @Column({type: 'double precision', nullable: false})
     mileage: number;
@@ -33,10 +27,7 @@ export class Solicitude {
 
     @Column({type:'date'})
     dateD: Date;
-
-    @Column({type: 'integer', nullable: false})
-    id_route: number;
-
+    
     @Column({type: 'integer', nullable: false})
     id_driver: number;
 
@@ -53,7 +44,6 @@ export class Solicitude {
     programmingType: ProgrammingType;
 
     @OneToOne(() => Route, (route) => route.solicitude)
-    @JoinColumn({name: 'id_route'})
     route: Route;
 
     @ManyToOne(() => GroupTour, (groupTour) => groupTour.solicitudes)

@@ -14,11 +14,11 @@ export class DriverController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get()
   @UseGuards(AuthGuard)
+  @Get()
   async findAll(@Query("dni_driver") dni_driver: string, @Query("driver_name") driver_name: string,
     @Query("type_driver_situation") type_driver_situation: string, @Query("id_car") id_car: string) {
-    return this.driverService.findAll(dni_driver, driver_name,
+    return await this.driverService.findAll(dni_driver, driver_name,
       type_driver_situation ? +type_driver_situation : undefined, id_car ? +id_car : undefined);
   }
 

@@ -8,5 +8,6 @@ import { GroupTour } from './entities/group_tour.entity';
   imports: [TypeOrmModule.forFeature([GroupTour])],
   controllers: [GroupTourController],
   providers: [GroupTourService],
+  exports: [GroupTourService]
 })
 export class GroupTourModule {}

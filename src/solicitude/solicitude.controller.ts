@@ -17,7 +17,7 @@ export class SolicitudeController {
   async findAll(@Query("id_car") id_car: string, @Query("id_aut_prog_type") id_aut_prog_type: string, 
   @Query("id_group") id_group: string,
   @Query("dateD") dateD: Date, @Query("id_driver") id_driver: string) {
-    return this.solicitudeService.findAll(id_car ? +id_car: undefined, 
+    return await this.solicitudeService.findAll(id_car ? +id_car: undefined, 
       id_aut_prog_type ? +id_aut_prog_type: undefined, id_group ? +id_group: undefined, 
       id_driver ? +id_driver : undefined , dateD);
   }
@@ -28,8 +28,9 @@ export class SolicitudeController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSolicitudeDto: UpdateSolicitudeDto) {
-    return this.solicitudeService.update(+id, updateSolicitudeDto);
+  async update(@Param('id') id: string, @Body() updateSolicitudeDto: UpdateSolicitudeDto) {
+    console.log(id)
+    return await this.solicitudeService.update(+id, updateSolicitudeDto);
   }
 
   @Delete(':id')

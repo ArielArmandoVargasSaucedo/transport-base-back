@@ -14,7 +14,7 @@ import { CodigoVerificacionModule } from 'src/codigo_verificacion/codigo_verific
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1d' },
     }),
     MailerModule,
     ConfigModule.forRoot(),
