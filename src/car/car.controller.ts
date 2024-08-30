@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { time } from 'console';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @Controller('car')
 export class CarController {
@@ -14,6 +15,7 @@ export class CarController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(AuthGuard)
   @Get()
   async findAll(@Query("car_number") car_number: string, @Query("car_brand") car_brand: string, @Query("number_of_seats") number_of_seats: string,
     @Query("type_car_situation") type_car_situation: string) {
