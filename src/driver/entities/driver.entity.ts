@@ -1,6 +1,7 @@
 import { Car } from "src/car/entities/car.entity";
 import { DriverSituation } from "src/driver_situation/entities/driver_situation.entity";
 import { DriverSituationSerializable } from "src/driver_situation/serializable/driver-situation.serializable";
+import { Solicitude } from "src/solicitude/entities/solicitude.entity";
 import { User } from "src/user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -36,4 +37,7 @@ export class Driver {
 
     @OneToOne(() => DriverSituation, (driverSituation) => driverSituation.driver)
     currentDriverSituation: DriverSituation; // representa la situación actual del driver
+
+    @OneToMany(() => Solicitude, solicitude => solicitude.driver)
+    solicitudes: Array<Solicitude>;
 }
