@@ -15,10 +15,10 @@ export class Route {
     @Column({type: 'varchar', nullable: false})
     pick_up_location: string;
 
-    @Column({type: 'time', nullable: false})
-    end_time: string;
+    @Column({type: 'date', nullable: false})
+    end_time: Date;
 
-    @Column({type: 'integer', nullable: false})
+    @Column({type: 'number', nullable: false})
     id_solicitude: number;
 
     @OneToOne(() => Solicitude, (solicitude) => solicitude.route)

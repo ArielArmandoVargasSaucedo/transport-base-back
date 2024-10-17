@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { ProgrammingTypeService } from './programming_type.service';
 import { CreateProgrammingTypeDto } from './dto/create-programming_type.dto';
 import { UpdateProgrammingTypeDto } from './dto/update-programming_type.dto';
@@ -12,9 +12,10 @@ export class ProgrammingTypeController {
     return this.programmingTypeService.create(createProgrammingTypeDto);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.programmingTypeService.findAll();
+  async findAll(@Query("prog_type_name") prog_type_name: string) {
+    return this.programmingTypeService.findAll(prog_type_name);
   }
 
   @Get(':id')

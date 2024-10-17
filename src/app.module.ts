@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
@@ -14,12 +12,11 @@ import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
 import { SolicitudeModule } from './solicitude/solicitude.module';
 import { ProgrammingTypeModule } from './programming_type/programming_type.module';
-import { DateDModule } from './date_d/date_d.module';
 import { GroupTourModule } from './group_tour/group_tour.module';
 import { RouteModule } from './route/route.module';
-import { ModificationModule } from './modification/modification.module';
-import { ModChangeModule } from './mod_change/mod_change.module';
-import { ChangeTypeModule } from './change_type/change_type.module';
+import { AuthModule } from './auth/auth.module';
+import { MailerModule } from './mailer/mailer.module';
+import { CodigoVerificacionModule } from './codigo_verificacion/codigo_verificacion.module';
 
 @Module({
   imports: [
@@ -48,14 +45,11 @@ import { ChangeTypeModule } from './change_type/change_type.module';
     RoleModule,
     SolicitudeModule,
     ProgrammingTypeModule,
-    DateDModule,
     GroupTourModule,
     RouteModule,
-    ModificationModule,
-    ModChangeModule,
-    ChangeTypeModule,
+    AuthModule,
+    MailerModule,
+    CodigoVerificacionModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

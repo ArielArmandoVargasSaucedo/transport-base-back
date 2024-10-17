@@ -10,5 +10,5 @@ export class ProgrammingType {
     prog_type_name: string;
 
     @OneToMany(() => Solicitude, (solicitude) => solicitude.programmingType)
-    solicitude: Solicitude;
+    solicitudes: Array<Solicitude>;
 }

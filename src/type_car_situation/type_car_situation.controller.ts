@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { TypeCarSituationService } from './type_car_situation.service';
 import { CreateTypeCarSituationDto } from './dto/create-type_car_situation.dto';
 import { UpdateTypeCarSituationDto } from './dto/update-type_car_situation.dto';
@@ -12,9 +12,10 @@ export class TypeCarSituationController {
     return this.typeCarSituationService.create(createTypeCarSituationDto);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.typeCarSituationService.findAll();
+  async findAll(@Query("type_cs_name") type_cs_name: string) {
+    return this.typeCarSituationService.findAll(type_cs_name);
   }
 
   @Get(':id')

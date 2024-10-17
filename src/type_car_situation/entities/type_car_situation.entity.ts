@@ -9,6 +9,9 @@ export class TypeCarSituation {
     @Column({type: 'varchar', unique: true, nullable: false})
     type_cs_name: string;
 
-    @OneToMany(() => TypeCarSituation, (typeCarSituation) => typeCarSituation.carSituation)
-    carSituation: CarSituation;
+    @Column({type: 'boolean', nullable: false})
+    is_return: boolean;
+
+    @OneToMany(() => CarSituation, (carSituation) => carSituation.typeCarSituation)
+    carSituations: Array<CarSituation>;
 }

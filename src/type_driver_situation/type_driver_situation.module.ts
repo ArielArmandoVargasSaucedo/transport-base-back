@@ -8,5 +8,6 @@ import { TypeDriverSituation } from './entities/type_driver_situation.entity';
   imports: [TypeOrmModule.forFeature([TypeDriverSituation])],
   controllers: [TypeDriverSituationController],
   providers: [TypeDriverSituationService],
+  exports: [TypeDriverSituationService]
 })
-export class TypeDriverSituationModule {}
+export class TypeDriverSituationModule { }

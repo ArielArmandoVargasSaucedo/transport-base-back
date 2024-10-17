@@ -8,5 +8,6 @@ import { TypeCarSituation } from './entities/type_car_situation.entity';
   imports: [TypeOrmModule.forFeature([TypeCarSituation])],
   controllers: [TypeCarSituationController],
   providers: [TypeCarSituationService],
+  exports: [TypeCarSituationService]
 })
 export class TypeCarSituationModule {}

@@ -16,5 +16,5 @@ export class GroupTour {
     number_of_tourist: number;
 
     @OneToMany(() => Solicitude, (solicitude) => solicitude.groupTour)
-    solicitude: Solicitude;
+    solicitudes: Array<Solicitude>;
 }
